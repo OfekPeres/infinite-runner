@@ -2,7 +2,7 @@
   "name": "ofek-gabe-dovid-cos426-final-project",
   "repository": "infinite-runner",
   "version": "0.1.0",
-  "title": "Infinite Runner",
+  "title": "Infinite-Runner",
   "description": "An infinite runner game. Score more points by survivng longer!",
   "keywords": [
     "Princeton",
@@ -14,9 +14,9 @@
     "cannonjs"
   ],
   "scripts": {
-    "start": "webpack-dev-server --mode development --output-public-path '/'",
-    "prebuild": "rimraf ./build && mkdir ./build",
-    "build": "npm run prebuild && webpack --mode production --output-public-path '/'",
+    "start": "webpack-dev-server --mode development --output-public-path \"\"",
+    "prebuild": "rimraf ./build && mkdirp ./build",
+    "build": "npm run prebuild && webpack --mode production --output-public-path \"\"",
     "format": "prettier --write '*.js' 'src/**/*.js'",
     "deploy": "npm run prebuild && webpack --mode production && gh-pages -d build"
   },
@@ -35,6 +35,7 @@
     "file-loader": "^6.0.0",
     "gh-pages": "^2.2.0",
     "html-webpack-plugin": "^4.2.1",
+    "mkdirp": "^1.0.4",
     "prettier": "^2.0.4",
     "raw-loader": "^4.0.1",
     "rimraf": "^3.0.2",

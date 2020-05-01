@@ -34,8 +34,8 @@ class Player
 
         const playerPos = this.playerBox.getAbsolutePosition();
         const impulse  = directionMap.up.scale(200 * keyMap[' ']);
-        console.log(playerPos);
-        console.log(impulse);
+        // console.log(playerPos);
+        // console.log(impulse);
         this.playerBox.physicsImpostor.applyImpulse(impulse, playerPos);
     }
 }
