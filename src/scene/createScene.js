@@ -1,11 +1,11 @@
-import * as BABYLON from 'babylonjs';
+import {Scene, Color3} from 'babylonjs';
 
 const createScene = (engine) => {
-    const scene = new BABYLON.Scene(engine);
+    const scene = new Scene(engine);
     scene.enablePhysics();
-    // const g = new BABYLON.Vector3(0, -20, 0);
+    // const g = new Vector3(0, -20, 0);
     // scene.getPhysicsEngine().setGravity(g);
-    scene.clearColor = new BABYLON.Color3.Blue();
+    scene.clearColor = new Color3.Blue();
     return scene;
 };
 

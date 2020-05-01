@@ -1,4 +1,4 @@
-import * as BABYLON from 'babylonjs';
+import {MeshBuilder, Vector3, PhysicsImpostor, Color3, StandardMaterial} from 'babylonjs';
 
 const createRandomBox = function(scene)
 {
@@ -19,13 +19,13 @@ const createRandomBox = function(scene)
         const restitution = Math.random()*.7;
 
         // Create Box
-        const box = BABYLON.MeshBuilder.CreateBox("Box", {height, width, depth}, scene);
-        box.position = new BABYLON.Vector3(x, y, z);
-        const randomMaterial = new BABYLON.StandardMaterial("randomMaterial", scene);
-        randomMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-        // randomMaterial.emissiveColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+        const box = MeshBuilder.CreateBox("Box", {height, width, depth}, scene);
+        box.position = new Vector3(x, y, z);
+        const randomMaterial = new StandardMaterial("randomMaterial", scene);
+        randomMaterial.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+        // randomMaterial.emissiveColor = new Color3(Math.random(), Math.random(), Math.random());
         box.material = randomMaterial;
-        box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
+        box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
 
         return box;
 };
@@ -33,16 +33,16 @@ const createRandomBox = function(scene)
 
 const createPlayerBox = (scene) =>
 {
-    const box = BABYLON.MeshBuilder.CreateBox("PlayerBox", { height: 10, width: 10, depth: 10 });
+    const box = MeshBuilder.CreateBox("PlayerBox", { height: 10, width: 10, depth: 10 });
     const mass = 10;
     const friction = .05;
     const restitution = .1;
-    box.position = new BABYLON.Vector3();
-    const material = new BABYLON.StandardMaterial("material", scene);
-    material.diffuseColor = new BABYLON.Color3(.6, .3, .9);
-    // material.emissiveColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+    box.position = new Vector3();
+    const material = new StandardMaterial("material", scene);
+    material.diffuseColor = new Color3(.6, .3, .9);
+    // material.emissiveColor = new Color3(Math.random(), Math.random(), Math.random());
     box.material = material;
-    box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
+    box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
 
     return box;
 };

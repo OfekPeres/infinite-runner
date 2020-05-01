@@ -2,7 +2,7 @@
   "name": "ofek-gabe-dovid-cos426-final-project",
   "repository": "infinite-runner",
   "version": "0.1.0",
-  "title": "Infinite-Runner",
+  "title": "infinite-runner",
   "description": "An infinite runner game. Score more points by survivng longer!",
   "keywords": [
     "Princeton",
@@ -15,10 +15,10 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --mode development --output-public-path \"\"",
-    "prebuild": "rimraf ./build && mkdirp ./build",
+    "prebuild": "rimraf ./build && mkdirp -v ./build",
     "build": "npm run prebuild && webpack --mode production --output-public-path \"\"",
     "format": "prettier --write '*.js' 'src/**/*.js'",
-    "deploy": "npm run prebuild && webpack --mode production && gh-pages -d build"
+    "deploy": "npm run prebuild  && webpack --mode production --progress && gh-pages -d build"
   },
   "dependencies": {
     "babylonjs": "^4.1.0",
@@ -32,13 +32,15 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
     "file-loader": "^6.0.0",
     "gh-pages": "^2.2.0",
-    "html-webpack-plugin": "^4.2.1",
+    "html-webpack-plugin": "^4.3.0",
     "mkdirp": "^1.0.4",
     "prettier": "^2.0.4",
     "raw-loader": "^4.0.1",
     "rimraf": "^3.0.2",
+    "style-loader": "^1.2.1",
     "webpack": "^4.43.0",
     "webpack-dev-server": "^3.10.3"
   },

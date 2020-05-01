@@ -1,4 +1,4 @@
-import * as BABYLON from 'babylonjs';
+import {Engine} from 'babylonjs';
 
 import createScene from './createScene';
 import createLighting from './createLighting';
@@ -10,10 +10,11 @@ import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
 
 
+
 const main = () => {
     const canvas = document.getElementById('game-canvas');
     canvas.focus();
-    const engine = new BABYLON.Engine(canvas, true);
+    const engine = new Engine(canvas, true);
     const scene = createScene(engine);
     createLighting(scene);
     createGround(scene);
