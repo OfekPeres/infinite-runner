@@ -38,12 +38,15 @@ const main = () => {
         {
             if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
             {
-                platform.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 10, 0));
-                platform.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-                if (platform.launcher.position.y > 10)
-                {
-                    platform.resetLauncher();
-                }
+             const impulse  = new Vector3(0, 300, 0)
+
+            player.playerBox.physicsImpostor.applyImpulse(impulse, player.playerBox.getAbsolutePosition());
+                // platform.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 10, 0));
+                // platform.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+                // if (platform.launcher.position.y > 10)
+                // {
+                //     platform.resetLauncher();
+                // }
             }
 
         }}
