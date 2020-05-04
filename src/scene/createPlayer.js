@@ -3,7 +3,7 @@ import {createPlayerBox} from './createBox.js';
 
 
 
-const SPEED = 7;
+const SPEED = 20;
 const left    = new Vector3(-1, 0, 0);
 const right   = new Vector3(1, 0, 0);
 const forward = new Vector3(0, 0, 1);

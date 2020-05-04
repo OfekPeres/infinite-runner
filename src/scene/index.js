@@ -1,13 +1,14 @@
-import {Engine} from 'babylonjs';
+import {Engine, Vector3} from 'babylonjs';
 
 import createScene from './createScene';
 import createLighting from './createLighting';
-import createGround from './createGround';
+import createInfiniteTrack, { updateInfiniteTrack } from './createGround';
 import createCamera from './createCamera';
 import { createRandomBox} from './createBox';
 import Player from './createPlayer';
 import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
+import Platform from './platform';
 
 
 
@@ -17,7 +18,7 @@ const main = () => {
     const engine = new Engine(canvas, true);
     const scene = createScene(engine);
     createLighting(scene);
-    createGround(scene);
+    const platforms = createInfiniteTrack(scene);
     const player = new Player(scene);
     createCamera(scene, canvas, player);
     for (let i = 0; i < 3; i++) {
@@ -28,6 +29,20 @@ const main = () => {
 
 
     engine.runRenderLoop(function() {
+        updateInfiniteTrack(platforms, player.playerBox.position.z);
+        for (const platform of platforms)
+        {
+            if (platform.hasLauncher)
+            {
+                platform.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 10, 0));
+                platform.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+                if (platform.launcher.position.y > 10)
+                {
+                    platform.resetLauncher();
+                }
+            }
+
+        }
         scene.render();
     });
 

@@ -7,9 +7,9 @@ const createCamera = (scene, canvas, player) => {
     // Parameters : name, position, scene
     // const camera = new UniversalCamera("UniversalCamera", new Vector3(0, camPos, -2*camPos), scene);
 
-    const followCamera = new FollowCamera("followCamera", new Vector3(0, camPos, -2*camPos), scene);
-    followCamera.radius = 1.2*camPos;              // How far from the object should the camera be.
-    followCamera.heightOffset = camPos/2;        // How high above the object should it be.
+    const followCamera = new FollowCamera("followCamera", new Vector3(0, camPos, -camPos), scene);
+    followCamera.radius = 35;              // How far from the object should the camera be.
+    followCamera.heightOffset = 16;        // How high above the object should it be.
     followCamera.rotationOffset = 180;      // The camera's angle. here - from behind.
     followCamera.cameraAcceleration = 0.5;  // Acceleration of the camera.
     followCamera.maxCameraSpeed = 20;       // The camera's max speed.
@@ -24,6 +24,7 @@ const createCamera = (scene, canvas, player) => {
 
     // Attach the camera to the canvas
     followCamera.attachControl(canvas, true);
+    // followCamera.maxZ = 300;
 };
 
 
