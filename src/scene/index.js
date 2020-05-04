@@ -10,7 +10,7 @@ import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
 import Platform from './platform';
 
-
+const game = {};
 
 const main = () => {
     const canvas = document.getElementById('game-canvas');
@@ -19,7 +19,9 @@ const main = () => {
     const scene = createScene(engine);
     createLighting(scene);
     const platforms = createInfiniteTrack(scene);
-    const player = new Player(scene);
+    game.platforms = platforms;
+    const player = new Player(scene, game);
+    // debugger;
     createCamera(scene, canvas, player);
     for (let i = 0; i < 3; i++) {
         createRandomBox(scene);
@@ -32,7 +34,7 @@ const main = () => {
         updateInfiniteTrack(platforms, player.playerBox.position.z);
         for (const platform of platforms)
         {
-            if (platform.hasLauncher)
+            if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
             {
                 platform.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 10, 0));
                 platform.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));

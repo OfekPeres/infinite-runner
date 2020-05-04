@@ -14,10 +14,11 @@ const directionMap = {left, right, forward, back, up};
 
 class Player
 {
-    constructor(scene)
+    constructor(scene, game)
     {
         this.playerBox = createPlayerBox(scene);
         // console.log(this.playerBox);
+        this.game = game;
     }
 
 
@@ -34,7 +35,15 @@ class Player
         this.playerBox.physicsImpostor.setLinearVelocity(velocity);
 
         const playerPos = this.playerBox.getAbsolutePosition();
-        const impulse  = directionMap.up.scale(200 * keyMap[' ']);
+        let onGround = 0;
+
+        for (let platform of this.game.platforms) {
+            if (this.playerBox.intersectsMesh(platform.platform)) {
+                onGround = 1;
+                break;
+            }
+        }
+        const impulse  = directionMap.up.scale(200 * keyMap[' '] * onGround);
         // console.log(playerPos);
         // console.log(impulse);
         this.playerBox.physicsImpostor.applyImpulse(impulse, playerPos);
