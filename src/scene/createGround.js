@@ -12,7 +12,7 @@ const createGround = (scene, z=0, x) => {
     const ground = MeshBuilder.CreateBox("Ground", {width, height, depth}, scene);
     ground.position.y = -5.0;
     ground.position.z = z;
-    ground.position.x += width * x
+    ground.position.x =  x
     const groundMat = new StandardMaterial("groundMat", scene);
     groundMat.diffuseColor = new Color3(0.5, 0.5, 0.5);
     // groundMat.emissiveColor = new Color3(0.2, 0.2, 0.2);
@@ -29,11 +29,11 @@ const createInfiniteTrack = (scene) =>
     const platforms = [];
     for (let i = 0; i < numTracks; i++ ){
         let temp = [];
-    temp.push(new Platform(scene, 0, i, false));
-    temp.push(new Platform(scene, 150, i));
-    temp.push(new Platform(scene, 300, i));
-    temp.push(new Platform(scene, 450, i));
-    temp.push(new Platform(scene, 600, i));
+    temp.push(new Platform(scene, 0, i * width, false));
+    temp.push(new Platform(scene, 150, i * width));
+    temp.push(new Platform(scene, 300, i * width));
+    temp.push(new Platform(scene, 450, i* width));
+    temp.push(new Platform(scene, 600, i * width));
     platforms.push(temp)
     }
     return platforms;

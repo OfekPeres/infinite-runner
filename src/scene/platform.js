@@ -3,11 +3,13 @@ import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3} from 'b
 
 
 // Create a smaller platform that will jump vertically
-const createLauncher = (scene) =>
+const createLauncher = (scene, z, x) =>
 {
     const launcher = MeshBuilder.CreateBox("launcher", {width: 15, height: 0.5, depth: 15}, scene);
     const launchMat = new StandardMaterial("launchMat", scene);
     launcher.position.y = -4.5;
+    launcher.position.z = z;
+    launcher.position.x = x;
     launchMat.diffuseColor = new Color3(.7, 0, 0.1);
     launchMat.backFaceCulling = false;
     launcher.material = launchMat;
@@ -26,9 +28,9 @@ class Platform
         this.hasLauncher = hasLauncher;
         if  (hasLauncher)
         {
-            this.launcher = createLauncher(scene);
-            this.launcher.position.x = this.platform.position.x;
-            this.launcher.position.z = this.platform.position.z;
+            this.launcher = createLauncher(scene, z, x);
+            // this.launcher.position.x = this.platform.position.x;
+            // this.launcher.position.z = this.platform.position.z;
         }
 
     }
