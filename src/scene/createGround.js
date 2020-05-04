@@ -28,11 +28,13 @@ const createInfiniteTrack = (scene) =>
 {
     const platforms = [];
     for (let i = 0; i < numTracks; i++ ){
-    platforms.push(new Platform(scene, 0, i, false));
-    platforms.push(new Platform(scene, 150, i));
-    platforms.push(new Platform(scene, 300, i));
-    platforms.push(new Platform(scene, 450, i));
-    platforms.push(new Platform(scene, 600, i));
+        let temp = [];
+    temp.push(new Platform(scene, 0, i, false));
+    temp.push(new Platform(scene, 150, i));
+    temp.push(new Platform(scene, 300, i));
+    temp.push(new Platform(scene, 450, i));
+    temp.push(new Platform(scene, 600, i));
+    platforms.push(temp)
     }
     return platforms;
 };
@@ -41,18 +43,16 @@ const createInfiniteTrack = (scene) =>
 const updateInfiniteTrack = (platforms, curZ) =>
 {
     for (let i = 0; i < numTracks; i++) {
-        let curPlatform = platforms[i*5]
-        let curLast  = platforms[i * 5 + 4]
-    if (curPlatform.platform.position.z + depth < curZ)
-    {
+        let lane = platforms[i]
+        let curPlatform = lane[0]
+         if (curPlatform.platform.position.z + depth < curZ)
+        {
+            curPlatform.platform.position.z = lane[lane.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
+            curPlatform.resetLauncher(); 
+            lane.push(lane.shift());
 
-        curPlatform.platform.position.z = curLast.platform.position.z + (depth/2) + 3*depth*Math.random();
-        curPlatform.resetLauncher();
-        let temp = curPlatform
-        platforms[i*5] = curLast
-        platforms[i * 5 + 4] = temp
+        }
     }
-}
 };
 
 

@@ -32,7 +32,9 @@ const main = () => {
 
     engine.runRenderLoop(function() {
         updateInfiniteTrack(platforms, player.playerBox.position.z);
-        for (const platform of platforms)
+        for (let i = 0; i < 3; i ++){
+            let lane = platforms[i]
+        for (const platform of lane)
         {
             if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
             {
@@ -44,7 +46,7 @@ const main = () => {
                 }
             }
 
-        }
+        }}
         scene.render();
     });
 

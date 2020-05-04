@@ -36,13 +36,15 @@ class Player
 
         const playerPos = this.playerBox.getAbsolutePosition();
         let onGround = 0;
-
-        for (let platform of this.game.platforms) {
+        for (let i = 0; i < 3; i++) {
+            let lane = this.game.platforms[i]
+        for (let platform of lane) {
             if (this.playerBox.intersectsMesh(platform.platform)) {
                 onGround = 1;
                 break;
             }
         }
+    }
         const impulse  = directionMap.up.scale(200 * keyMap[' '] * onGround);
         // console.log(playerPos);
         // console.log(impulse);
