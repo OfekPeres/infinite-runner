@@ -1,16 +1,18 @@
 import {MeshBuilder, StandardMaterial, Color3, PhysicsImpostor} from 'babylonjs';
 import Platform from './platform';
 
-const width = 120;
+const numTracks = 3
+const width = 120 / numTracks;
 const height = 1;
 const depth = 50;
 
 
-const createGround = (scene, z=0) => {
+const createGround = (scene, z=0, x) => {
 
     const ground = MeshBuilder.CreateBox("Ground", {width, height, depth}, scene);
     ground.position.y = -5.0;
     ground.position.z = z;
+    ground.position.x += width * x
     const groundMat = new StandardMaterial("groundMat", scene);
     groundMat.diffuseColor = new Color3(0.5, 0.5, 0.5);
     // groundMat.emissiveColor = new Color3(0.2, 0.2, 0.2);
@@ -25,28 +27,32 @@ const createGround = (scene, z=0) => {
 const createInfiniteTrack = (scene) =>
 {
     const platforms = [];
-
-    platforms.push(new Platform(scene, 0, false));
-    platforms.push(new Platform(scene, 150));
-    platforms.push(new Platform(scene, 300));
-    platforms.push(new Platform(scene, 450));
-    platforms.push(new Platform(scene, 600));
+    for (let i = 0; i < numTracks; i++ ){
+    platforms.push(new Platform(scene, 0, i, false));
+    platforms.push(new Platform(scene, 150, i));
+    platforms.push(new Platform(scene, 300, i));
+    platforms.push(new Platform(scene, 450, i));
+    platforms.push(new Platform(scene, 600, i));
+    }
     return platforms;
 };
 
 
 const updateInfiniteTrack = (platforms, curZ) =>
 {
-    const curPlatform = platforms[0];
-
+    for (let i = 0; i < numTracks; i++) {
+        let curPlatform = platforms[i*5]
+        let curLast  = platforms[i * 5 + 4]
     if (curPlatform.platform.position.z + depth < curZ)
     {
 
-        curPlatform.platform.position.z = platforms[platforms.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
+        curPlatform.platform.position.z = curLast.platform.position.z + (depth/2) + 3*depth*Math.random();
         curPlatform.resetLauncher();
-        platforms.push(platforms.shift());
+        let temp = curPlatform
+        platforms[i*5] = curLast
+        platforms[i * 5 + 4] = temp
     }
-
+}
 };
 
 

@@ -20,9 +20,9 @@ const createLauncher = (scene) =>
 class Platform
 {
 
-    constructor(scene, z, hasLauncher=true)
+    constructor(scene, z, x, hasLauncher=true)
     {
-        this.platform = createGround(scene, z);
+        this.platform = createGround(scene, z, x);
         this.hasLauncher = hasLauncher;
         if  (hasLauncher)
         {
