@@ -22,10 +22,10 @@ const main = () => {
     game.platforms = platforms;
     const player = new Player(scene, game);
     createCamera(scene, canvas, player);
-    for (let i = 0; i < 3; i++)
-    {
-        createRandomBox(scene);
-    }
+    // for (let i = 0; i < 3; i++)
+    // {
+    //     createRandomBox(scene);
+    // }
     handleKeyboard(scene, player);
     handleResize(engine);
 

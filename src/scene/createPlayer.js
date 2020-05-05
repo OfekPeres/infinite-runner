@@ -19,6 +19,7 @@ class Player
         this.playerBox = createPlayerBox(scene);
         // console.log(this.playerBox);
         this.game = game;
+        this.currentlyJumping = false
     }
 
     resetPlayer()
@@ -31,6 +32,7 @@ class Player
         // console.log(curPlatform.platform.position);
         this.playerBox.physicsImpostor.position = curPlatform.platform.position;
         this.playerBox.position.y+=20;
+        this.currentlyJumping = false
         // console.log(this.playerBox.position);
 
     }
@@ -49,17 +51,25 @@ class Player
 
         const playerPos = this.playerBox.getAbsolutePosition();
         // Only allow the player to jump if the player is currently on the ground.
+        // or as part of a double jump
         let onGround = 0;
         for (let i = 0; i < 3; i++)
         {
             const lane = this.game.platforms[i];
             for (const platform of lane)
             {
+            if (keyMap[' '] == 1 && this.currentlyJumping) {
+                this.currentlyJumping = false
+                onGround = 1
+                break;
+            }
             if (this.playerBox.intersectsMesh(platform.platform)) {
                 onGround = 1;
+                this.currentlyJumping = true
                 break;
             }
         }
+        if (onGround == 1) {break}
     }
         const impulse  = directionMap.up.scale(200 * keyMap[' '] * onGround);
         this.playerBox.physicsImpostor.applyImpulse(impulse, playerPos);
