@@ -31,7 +31,7 @@ const createInfiniteTrack = (scene) =>
     {
         const temp = [];
         temp.push(new Platform(scene, 0, i * width, false));
-        temp.push(new Platform(scene, 150, i * width));
+        temp.push(new Platform(scene, 150, i * width, false));
         temp.push(new Platform(scene, 300, i * width));
         temp.push(new Platform(scene, 450, i* width));
         temp.push(new Platform(scene, 600, i * width));

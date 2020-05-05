@@ -30,6 +30,42 @@ const createRandomBox = function(scene)
         return box;
 };
 
+const createRotatingBox = (scene) =>
+{
+    const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 10, depth: 20});
+    const mass = 1000;
+
+    const friction = .05
+    const restitution = .1
+    box.setAbsolutePosition(new Vector3(0, 6.5, 150))
+    // debugger;
+    const material = new StandardMaterial("material", scene)
+    material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random())
+    box.material = material;
+    box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
+    box.physicsImpostor.setAngularVelocity(new Vector3(0, 200, 0));
+    // debugger
+    return box;
+}
+
+const createRotatingBox2 = (scene) =>
+{
+    const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 150, depth: 20});
+    const mass = 1000;
+
+    const friction = 0
+    const restitution = .1
+    box.setAbsolutePosition(new Vector3(40, 6.5, 150))
+    // debugger;
+    const material = new StandardMaterial("material", scene)
+    material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random())
+    box.material = material;
+    box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
+    box.physicsImpostor.setAngularVelocity(new Vector3(0, 1, 0));
+    // debugger
+    return box;
+}
+
 
 const createPlayerBox = (scene) =>
 {
@@ -48,4 +84,4 @@ const createPlayerBox = (scene) =>
 };
 
 
-export {createRandomBox, createPlayerBox};
+export {createRandomBox, createPlayerBox, createRotatingBox, createRotatingBox2};

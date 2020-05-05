@@ -4,7 +4,7 @@ import createScene from './createScene';
 import createLighting from './createLighting';
 import createInfiniteTrack, { updateInfiniteTrack } from './createGround';
 import createCamera from './createCamera';
-import { createRandomBox} from './createBox';
+import { createRandomBox, createRotatingBox, createRotatingBox2} from './createBox';
 import Player from './createPlayer';
 import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
@@ -26,6 +26,7 @@ const main = () => {
     // {
     //     createRandomBox(scene);
     // }
+    createRotatingBox2(scene)
     handleKeyboard(scene, player);
     handleResize(engine);
 
@@ -36,8 +37,11 @@ const main = () => {
             const lane = platforms[i];
             for (const platform of lane)
             {
-                if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
-                {
+                if (player.playerBox.intersectsMesh(platform.platform)){
+                    player.jumps = 0
+                }
+                if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher)){
+                player.jumps = 0
                 const impulse  = new Vector3(0, 300, 0);
 
                 player.playerBox.physicsImpostor.applyImpulse(impulse, player.playerBox.getAbsolutePosition());

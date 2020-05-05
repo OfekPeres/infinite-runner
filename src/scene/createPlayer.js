@@ -19,7 +19,7 @@ class Player
         this.playerBox = createPlayerBox(scene);
         // console.log(this.playerBox);
         this.game = game;
-        this.currentlyJumping = false
+        this.jumps = 0;
     }
 
     resetPlayer()
@@ -31,7 +31,7 @@ class Player
         const curPlatform = this.game.platforms[1][0];
         // console.log(curPlatform.platform.position);
 
-        this.currentlyJumping = false
+        this.jumps = 0;
         this.playerBox.position = curPlatform.platform.position.clone();
         this.playerBox.position.y = 40;
         // console.log(this.playerBox.position);
@@ -59,14 +59,9 @@ class Player
             const lane = this.game.platforms[i];
             for (const platform of lane)
             {
-            if (keyMap[' '] == 1 && this.currentlyJumping) {
-                this.currentlyJumping = false
+            if (keyMap[' '] == 1 && this.jumps < 1) {
                 onGround = 1
-                break;
-            }
-            if (this.playerBox.intersectsMesh(platform.platform)) {
-                onGround = 1;
-                this.currentlyJumping = true
+                this.jumps += 1
                 break;
             }
         }
