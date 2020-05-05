@@ -27,10 +27,10 @@ class Player
         // this.playerBox.position.y = 20;
         this.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
         this.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
-        const curPlatform = this.game.platforms[1][2];
+        const curPlatform = this.game.platforms[1][0];
         // console.log(curPlatform.platform.position);
-        this.playerBox.physicsImpostor.position = curPlatform.platform.position;
-        this.playerBox.position.y+=20;
+        this.playerBox.position = curPlatform.platform.position.clone();
+        this.playerBox.position.y = 40;
         // console.log(this.playerBox.position);
 
     }

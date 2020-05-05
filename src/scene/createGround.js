@@ -19,7 +19,7 @@ const createGround = (scene, z=0, x) => {
     groundMat.backFaceCulling = false;
     ground.material = groundMat;
     ground.receiveShadows = true;
-    ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, { mass: 0, friction: .1, restitution: 0.7 }, scene);
+    ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, { mass: 0, friction: .15, restitution: 0.7 }, scene);
     return ground;
 };
 
