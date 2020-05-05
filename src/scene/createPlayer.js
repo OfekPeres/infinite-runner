@@ -21,6 +21,19 @@ class Player
         this.game = game;
     }
 
+    resetPlayer()
+    {
+
+        // this.playerBox.position.y = 20;
+        this.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+        this.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+        const curPlatform = this.game.platforms[1][2];
+        // console.log(curPlatform.platform.position);
+        this.playerBox.physicsImpostor.position = curPlatform.platform.position;
+        this.playerBox.position.y+=20;
+        // console.log(this.playerBox.position);
+
+    }
 
     handleKeyPress(keyMap)
     {
@@ -35,10 +48,13 @@ class Player
         this.playerBox.physicsImpostor.setLinearVelocity(velocity);
 
         const playerPos = this.playerBox.getAbsolutePosition();
+        // Only allow the player to jump if the player is currently on the ground.
         let onGround = 0;
-        for (let i = 0; i < 3; i++) {
-            let lane = this.game.platforms[i]
-        for (let platform of lane) {
+        for (let i = 0; i < 3; i++)
+        {
+            const lane = this.game.platforms[i];
+            for (const platform of lane)
+            {
             if (this.playerBox.intersectsMesh(platform.platform)) {
                 onGround = 1;
                 break;
@@ -46,8 +62,6 @@ class Player
         }
     }
         const impulse  = directionMap.up.scale(200 * keyMap[' '] * onGround);
-        // console.log(playerPos);
-        // console.log(impulse);
         this.playerBox.physicsImpostor.applyImpulse(impulse, playerPos);
     }
 }

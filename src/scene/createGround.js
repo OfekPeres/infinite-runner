@@ -1,7 +1,7 @@
 import {MeshBuilder, StandardMaterial, Color3, PhysicsImpostor} from 'babylonjs';
 import Platform from './platform';
 
-const numTracks = 3
+const numTracks = 3;
 const width = 120 / numTracks;
 const height = 1;
 const depth = 50;
@@ -12,7 +12,7 @@ const createGround = (scene, z=0, x) => {
     const ground = MeshBuilder.CreateBox("Ground", {width, height, depth}, scene);
     ground.position.y = -5.0;
     ground.position.z = z;
-    ground.position.x =  x
+    ground.position.x = x;
     const groundMat = new StandardMaterial("groundMat", scene);
     groundMat.diffuseColor = new Color3(0.5, 0.5, 0.5);
     // groundMat.emissiveColor = new Color3(0.2, 0.2, 0.2);
@@ -27,14 +27,15 @@ const createGround = (scene, z=0, x) => {
 const createInfiniteTrack = (scene) =>
 {
     const platforms = [];
-    for (let i = 0; i < numTracks; i++ ){
-        let temp = [];
-    temp.push(new Platform(scene, 0, i * width, false));
-    temp.push(new Platform(scene, 150, i * width));
-    temp.push(new Platform(scene, 300, i * width));
-    temp.push(new Platform(scene, 450, i* width));
-    temp.push(new Platform(scene, 600, i * width));
-    platforms.push(temp)
+    for (let i = 0; i < numTracks; i++)
+    {
+        const temp = [];
+        temp.push(new Platform(scene, 0, i * width, false));
+        temp.push(new Platform(scene, 150, i * width));
+        temp.push(new Platform(scene, 300, i * width));
+        temp.push(new Platform(scene, 450, i* width));
+        temp.push(new Platform(scene, 600, i * width));
+        platforms.push(temp);
     }
     return platforms;
 };
@@ -43,12 +44,12 @@ const createInfiniteTrack = (scene) =>
 const updateInfiniteTrack = (platforms, curZ) =>
 {
     for (let i = 0; i < numTracks; i++) {
-        let lane = platforms[i]
-        let curPlatform = lane[0]
-         if (curPlatform.platform.position.z + depth < curZ)
+        const lane = platforms[i];
+        const curPlatform = lane[0];
+        if (curPlatform.platform.position.z + depth < curZ)
         {
             curPlatform.platform.position.z = lane[lane.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
-            curPlatform.resetLauncher(); 
+            curPlatform.resetLauncher();
             lane.push(lane.shift());
 
         }

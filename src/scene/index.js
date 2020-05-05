@@ -21,9 +21,9 @@ const main = () => {
     const platforms = createInfiniteTrack(scene);
     game.platforms = platforms;
     const player = new Player(scene, game);
-    // debugger;
     createCamera(scene, canvas, player);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++)
+    {
         createRandomBox(scene);
     }
     handleKeyboard(scene, player);
@@ -32,15 +32,15 @@ const main = () => {
 
     engine.runRenderLoop(function() {
         updateInfiniteTrack(platforms, player.playerBox.position.z);
-        for (let i = 0; i < 3; i ++){
-            let lane = platforms[i]
-        for (const platform of lane)
-        {
-            if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
+        for (let i = 0; i < 3; i ++) {
+            const lane = platforms[i];
+            for (const platform of lane)
             {
-             const impulse  = new Vector3(0, 300, 0)
+                if (platform.hasLauncher && player.playerBox.intersectsMesh(platform.launcher))
+                {
+                const impulse  = new Vector3(0, 300, 0);
 
-            player.playerBox.physicsImpostor.applyImpulse(impulse, player.playerBox.getAbsolutePosition());
+                player.playerBox.physicsImpostor.applyImpulse(impulse, player.playerBox.getAbsolutePosition());
                 // platform.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 10, 0));
                 // platform.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
                 // if (platform.launcher.position.y > 10)
@@ -49,7 +49,14 @@ const main = () => {
                 // }
             }
 
-        }}
+        }
+    }
+    if (player.playerBox.position.y < -40)
+    {
+        console.log("Reset Player");
+        player.resetPlayer();
+        // player.playerBox.position.y = 20;
+    }
         scene.render();
     });
 
