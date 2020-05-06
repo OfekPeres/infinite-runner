@@ -25,10 +25,11 @@ const initializePlatforms = (scene, numPlatforms, lanePos, laneDimensions, platf
     const startPos = lanePos.clone();
     for (let i = 0; i < numPlatforms; i++)
     {
-        startPos.z = lanePos.z + i*platformDimensions.depth;
+        startPos.z = lanePos.z;
         if (i !== 0)
         {
-            startPos.z += Math.random()*platformDimensions.depth;
+            startPos.z = platforms[i-1].platform.position.z + platformDimensions.depth + Math.random()*3*platformDimensions.depth;
+
         }
         // Check if first element (i === 0) for determining hasLauncher and whether it should have any offset from the origin
         const pos = calculatePlatformPos(startPos, laneDimensions, i===0);
@@ -42,22 +43,10 @@ class Lane
     constructor(scene, numPlatforms, lanePos, laneDimensions, platformDimensions)
     {
         // Initialize platforms
+        this.lanePos = lanePos.clone();
         this.platforms = initializePlatforms(scene, numPlatforms, lanePos, laneDimensions, platformDimensions);
-        this.platformDimensions = platformDimensions;
     }
 
-    extendTrack()
-    {
-        const curPlatform = this.platforms[0];
-        if (curPlatform.platform.position.z + this.platformDimensions.depth < curZ)
-        {
-            curPlatform.platform.position.z = lane[lane.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
-            curPlatform.platform.position.x = lane[lane.length-1].platform.position.x + (width/2) + 3*width*Math.random();
-            curPlatform.resetLauncher();
-            lane.push(lane.shift());
-
-        }
-    }
 }
 
 

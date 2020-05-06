@@ -40,6 +40,7 @@ class Game
             const curLane = new Lane(scene, numPlatforms, curLanePos, laneDimensions, platformDimensions);
             this.lanes.push(curLane);
         }
+        this.extendTrack();
 
     }
 
@@ -48,14 +49,27 @@ class Game
     extendTrack()
     {
         const depth = platformDimensions.depth;
+        const laneWidth = laneDimensions.width;
         for (const lane of this.lanes)
         {
             const curPlatform = lane.platforms[0];
+            const laneX = lane.lanePos.x;
             if (curPlatform.platform.position.z + depth < this.player.playerBox.position.z)
             {
-                curPlatform.platform.position.z = lane.platforms[lane.platforms.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
+                // Randomize Z position - place the new platform at the front of the lane + some random bonus
+                curPlatform.platform.position.z = lane.platforms[lane.platforms.length-1].platform.position.z + (depth) + 3*depth*Math.random();
+
+                // Randomize X position - place the new platform randomly within the lane
+
+                const randRangeX = laneWidth - platformDimensions.width;
+                const xRandShift = Math.random()*randRangeX - randRangeX/2;
+                curPlatform.platform.position.x = laneX + xRandShift;
+                // Randomize Y position
+
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
+
+
 
             }
 
@@ -66,7 +80,7 @@ class Game
     update()
     {
         this.extendTrack();
-        this.checkIfDied()
+        this.checkIfDied();
         // Check if in contact with the ground, if so, reset jump count
         const onGround = this.checkOnGround();
         if (onGround)

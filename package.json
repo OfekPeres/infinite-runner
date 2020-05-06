@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "babylonjs": "^4.1.0",
+    "babylonjs-loaders": "^4.1.0",
     "cannon": "github:schteppe/cannon.js",
     "dat.gui": "^0.7.7",
     "three": "^0.115.0",

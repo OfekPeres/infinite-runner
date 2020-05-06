@@ -42,10 +42,12 @@ class Platform
     {
         // console.log("Initializing Platform in Platform");
         this.platform = createPlatform(scene, pos, platformDimensions);
+        this.platformDimensions = platformDimensions;
         this.hasLauncher = hasLauncher;
         if  (hasLauncher)
         {
             this.launcher = createLauncher(scene, pos, platformDimensions);
+            this.resetLauncher();
         }
 
     }
@@ -55,11 +57,23 @@ class Platform
     {
         if (this.hasLauncher)
         {
-            this.launcher.position.y = -4.5;
+            this.launcher.position.y = this.platform.position.y + this.platformDimensions.height/4;
             this.launcher.position.z = this.platform.position.z;
             this.launcher.position.x = this.platform.position.x;
             this.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+            this.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+            // Position launcher randomly on the platform - make sure that it won't hang over the edge
 
+            const launcherWidth = this.platformDimensions.width/4;
+            const randRangeX = this.platformDimensions.width - launcherWidth;
+            const xRandShift = Math.random()*randRangeX - randRangeX/2;
+            this.launcher.position.x += xRandShift;
+
+            // Figure out why this depth is divided by 2 and not by 4
+            const launcherDepth = this.platformDimensions.depth/2;
+            const randRangeZ = this.platformDimensions.depth-launcherDepth;
+            const zRandShift = Math.random()*randRangeZ - randRangeZ/2;
+            this.launcher.position.z += zRandShift;
         }
     }
     // Check if the player mesh is in contact with any part of the platform
