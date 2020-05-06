@@ -52,6 +52,7 @@ class Lane
         if (curPlatform.platform.position.z + this.platformDimensions.depth < curZ)
         {
             curPlatform.platform.position.z = lane[lane.length-1].platform.position.z + (depth/2) + 3*depth*Math.random();
+            curPlatform.platform.position.x = lane[lane.length-1].platform.position.x + (width/2) + 3*width*Math.random();
             curPlatform.resetLauncher();
             lane.push(lane.shift());
 

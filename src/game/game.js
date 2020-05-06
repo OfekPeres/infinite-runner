@@ -66,6 +66,7 @@ class Game
     update()
     {
         this.extendTrack();
+        this.checkIfDied()
         // Check if in contact with the ground, if so, reset jump count
         const onGround = this.checkOnGround();
         if (onGround)
@@ -80,7 +81,18 @@ class Game
 
     handleLaunchers()
     {
+        for (const lane of this.lanes)
+        {
+            for (let i = 0; i < 3; i++)
+            {
+                const curPlatform = lane.platforms[i];
+                if (curPlatform.hasLauncher && this.player.playerBox.intersectsMesh(curPlatform.launcher)){
+                 const impulse  = new Vector3(0, 300, 0);
+                 this.player.playerBox.physicsImpostor.applyImpulse(impulse, this.player.playerBox.getAbsolutePosition());
+                }
+            }
 
+        }
     }
     checkOnGround()
     {
@@ -97,6 +109,12 @@ class Game
             }
         }
         return false;
+    }
+    checkIfDied(){
+            if (this.player.playerBox.position.y < -40)
+    {
+        this.player.resetPlayer(this.lanes[1].platforms[0]);
+    }
     }
     // Returns a 0 if not allowed to jump and a 1 if allowed to jump
     handleJump()
