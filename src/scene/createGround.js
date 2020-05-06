@@ -1,5 +1,5 @@
 import {MeshBuilder, StandardMaterial, Color3, PhysicsImpostor} from 'babylonjs';
-import Platform from './platform';
+import Platform from '../game/platform';
 
 const numTracks = 3;
 const width = 120 / numTracks;
