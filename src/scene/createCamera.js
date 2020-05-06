@@ -24,6 +24,7 @@ const createCamera = (scene, canvas, player) => {
 
     // Attach the camera to the canvas
     followCamera.attachControl(canvas, true);
+    followCamera.inputs.clear();
     // followCamera.maxZ = 300;
 };
 

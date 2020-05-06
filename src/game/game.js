@@ -40,7 +40,6 @@ class Game
             const curLane = new Lane(scene, numPlatforms, curLanePos, laneDimensions, platformDimensions);
             this.lanes.push(curLane);
         }
-        this.extendTrack();
 
     }
 
@@ -159,10 +158,17 @@ class Game
     {
         // Calculate velocity
         const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(.7);
+        // AWSD Controls
         velocity.addInPlace(directionMap.left.scale(keyMap.a * SPEED));
         velocity.addInPlace(directionMap.right.scale(keyMap.d * SPEED));
         velocity.addInPlace(directionMap.forward.scale(keyMap.w * SPEED));
         velocity.addInPlace(directionMap.back.scale(keyMap.s * SPEED));
+
+        // Arrow Keys Controls
+        velocity.addInPlace(directionMap.left.scale(keyMap.ArrowLeft * SPEED));
+        velocity.addInPlace(directionMap.right.scale(keyMap.ArrowRight * SPEED));
+        velocity.addInPlace(directionMap.forward.scale(keyMap.ArrowUp * SPEED));
+        velocity.addInPlace(directionMap.back.scale(keyMap.ArrowDown * SPEED));
         // velocity.addInPlace(directionMap.up.scale(-2));
         // Update Player's Velocity
         this.player.playerBox.physicsImpostor.setLinearVelocity(velocity);
