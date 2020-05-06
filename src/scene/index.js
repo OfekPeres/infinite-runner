@@ -9,8 +9,10 @@ import Player from '../game/createPlayer';
 import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
 import Game from '../game/game';
-import Platform from '../game/platform';
-import Lane from '../game/lane';
+// import Platform from '../game/platform';
+// import Lane from '../game/lane';
+
+// import createSpikeball from "./createSpikeBallNet";
 
 const main = () => {
     const canvas = document.getElementById('game-canvas');
@@ -31,7 +33,7 @@ const main = () => {
     // createRotatingBox2(scene);
     handleKeyboard(scene, game);
     handleResize(engine);
-
+    // createSpikeball(scene);
 
     engine.runRenderLoop(function() {
         // updateInfiniteTrack(platforms, player.playerBox.position.z);

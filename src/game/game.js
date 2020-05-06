@@ -77,6 +77,14 @@ class Game
         // Check if player is in contact with a launcher
         this.handleLaunchers();
 
+        // Update Player's Velocity to move forward
+        // debugger
+        const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
+        const vel = new Vector3(0, 0, SPEED*2);
+        vel.x += curVel.x;
+        vel.y += curVel.y;
+        this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
+
     }
 
     handleLaunchers()
@@ -86,9 +94,10 @@ class Game
             for (let i = 0; i < 3; i++)
             {
                 const curPlatform = lane.platforms[i];
-                if (curPlatform.hasLauncher && this.player.playerBox.intersectsMesh(curPlatform.launcher)){
-                 const impulse  = new Vector3(0, 300, 0);
-                 this.player.playerBox.physicsImpostor.applyImpulse(impulse, this.player.playerBox.getAbsolutePosition());
+                if (curPlatform.hasLauncher && this.player.playerBox.intersectsMesh(curPlatform.launcher))
+                {
+                    const impulse  = new Vector3(0, 300, 0);
+                    this.player.playerBox.physicsImpostor.applyImpulse(impulse, this.player.playerBox.getAbsolutePosition());
                 }
             }
 
@@ -110,12 +119,14 @@ class Game
         }
         return false;
     }
-    checkIfDied(){
-            if (this.player.playerBox.position.y < -40)
+    checkIfDied()
     {
-        this.player.resetPlayer(this.lanes[1].platforms[0]);
+        if (this.player.playerBox.position.y < -40)
+        {
+            this.player.resetPlayer(this.lanes[1].platforms[0]);
+        }
     }
-    }
+
     // Returns a 0 if not allowed to jump and a 1 if allowed to jump
     handleJump()
     {
@@ -136,10 +147,11 @@ class Game
         const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(.7);
         velocity.addInPlace(directionMap.left.scale(keyMap.a * SPEED));
         velocity.addInPlace(directionMap.right.scale(keyMap.d * SPEED));
-        velocity.addInPlace(directionMap.forward.scale(keyMap.w * SPEED));
-        velocity.addInPlace(directionMap.back.scale(keyMap.s * SPEED));
-        // velocity.addInPlace(directionMap.up.scale(-2));
+        // velocity.addInPlace(directionMap.forward.scale(keyMap.w * SPEED));
 
+        velocity.addInPlace(directionMap.forward.scale(SPEED));
+        // velocity.addInPlace(directionMap.back.scale(keyMap.s * SPEED));
+        // velocity.addInPlace(directionMap.up.scale(-2));
         // Update Player's Velocity
         this.player.playerBox.physicsImpostor.setLinearVelocity(velocity);
 
