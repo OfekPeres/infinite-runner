@@ -79,11 +79,11 @@ class Game
 
         // Update Player's Velocity to move forward
         // debugger
-        const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
-        const vel = new Vector3(0, 0, SPEED*2);
-        vel.x += curVel.x;
-        vel.y += curVel.y;
-        this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
+        // const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
+        // const vel = new Vector3(0, 0, SPEED*2);
+        // vel.x += curVel.x;
+        // vel.y += curVel.y;
+        // this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
 
     }
 
@@ -147,10 +147,8 @@ class Game
         const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(.7);
         velocity.addInPlace(directionMap.left.scale(keyMap.a * SPEED));
         velocity.addInPlace(directionMap.right.scale(keyMap.d * SPEED));
-        // velocity.addInPlace(directionMap.forward.scale(keyMap.w * SPEED));
-
-        velocity.addInPlace(directionMap.forward.scale(SPEED));
-        // velocity.addInPlace(directionMap.back.scale(keyMap.s * SPEED));
+        velocity.addInPlace(directionMap.forward.scale(keyMap.w * SPEED));
+        velocity.addInPlace(directionMap.back.scale(keyMap.s * SPEED));
         // velocity.addInPlace(directionMap.up.scale(-2));
         // Update Player's Velocity
         this.player.playerBox.physicsImpostor.setLinearVelocity(velocity);
