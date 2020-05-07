@@ -46,7 +46,7 @@ const updateScoreBoard = (score) =>
     const scoreBoardMessage = document.getElementById('score-message');
     scoreBoardValue.innerHTML = score;
 
-    if (score % 2000 <= 200 && score > 0)
+    if (score % 2000 <= 200 && score > 2000)
     {
         scoreBoardMessage.style.textShadow = "0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073";
         scoreBoardValue.style.textShadow = "0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073";
