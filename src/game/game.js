@@ -69,14 +69,18 @@ class Game
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
-                
                  if (curPlatform.hasBreakableWall) 
                       {
-                        // debugger
-                    let a = curPlatform.breakableWall[0][0].position
                     curPlatform.resetBreakableWall(platformDimensions);
-                    let b = curPlatform.breakableWall[0][0].position
                      }
+                 if (curPlatform.hasSmallRotater) 
+                 {
+                    curPlatform.resetSmallRotater()
+                 }
+                 if (curPlatform.hasLargeRotater)
+                 {
+                    curPlatform.resetLargeRotater()
+                 }
             }
 
         }

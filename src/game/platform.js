@@ -1,4 +1,5 @@
 import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3} from 'babylonjs';
+import {createRandomBox, createRotatingBox, createRotatingBox2} from '../scene/createBox.js';
 
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
@@ -20,28 +21,7 @@ const createLauncher = (scene, pos, platformDimensions) =>
 
 };
 
-const createRandomBox = function(scene, x, y, z)
-{
-        const scale = 15;
-        const height = 5
-        const width = 5 
-        const depth = 10
 
-        // Create Random Physical Properties for Box
-        const friction    = Math.random()*10;
-        const mass        = height*width*depth/scale;
-        const restitution = Math.random()*.7;
-
-        // Create Box
-        const box = MeshBuilder.CreateBox("Box", {height, width, depth}, scene);
-        box.position = new Vector3(x, y, z);
-        const randomMaterial = new StandardMaterial("randomMaterial", scene);
-        randomMaterial.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
-        box.material = randomMaterial;
-        box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
-
-        return box;
-};
 
 const createBreakableWall = (scene, pos, platformDimensions) => {
     const width = 10
@@ -76,22 +56,34 @@ const createPlatform = (scene, pos, platformDimensions) =>
 class Platform
 {
 
-    constructor(scene, pos, platformDimensions, hasLauncher=false, hasBreakableWall=true)
+    constructor(scene, pos, platformDimensions)
     {
         // console.log("Initializing Platform in Platform");
         this.platform = createPlatform(scene, pos, platformDimensions);
         this.platformDimensions = platformDimensions;
-        this.hasLauncher = hasLauncher;
-        this.hasBreakableWall = hasBreakableWall;
-        if  (hasLauncher)
+        this.hasLauncher = false;
+        this.hasBreakableWall = false;
+        this.hasLargeRotater = false;
+        this.hasSmallRotater = false;
+        this.setObstacle()
+        if  (this.hasLauncher)
         {
             this.launcher = createLauncher(scene, pos, platformDimensions);
             this.resetLauncher();
         }
-        if (hasBreakableWall) {
+        if (this.hasBreakableWall) {
             this.breakableWall = createBreakableWall(scene, pos, platformDimensions)
             // debugger;
             this.resetBreakableWall(platformDimensions)
+        }
+        if (this.hasSmallRotater) 
+        {
+            this.smallRotater = createRotatingBox(scene, pos.x, pos.y + 10.5, pos.z)
+        }
+
+        if (this.hasLargeRotater) 
+        {
+            this.largeRotater = createRotatingBox2(scene, pos.x, pos.y + 10.5, pos.z)
         }
 
 
@@ -122,19 +114,61 @@ class Platform
         }
     }
 
+    setObstacle() 
+    {
+        let r = Math.random()
+        if (r < 1) {
+            this.hasLauncher = true
+        }
+        else if (r < 0) {
+            this.hasBreakableWall = true
+        }
+        else if (r < .75) {
+            this.hasLargeRotater = true;
+        }
+        else 
+            this.hasSmallRotater = true;
+    }
+
+    resetSmallRotater()
+    {
+        let pos = this.platform.position
+        this.smallRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z)
+        this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 200, 0));
+
+
+
+    }
+
+    resetLargeRotater()
+    {
+        let pos = this.platform.position
+        this.largeRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z)
+        this.largeRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 1, 0));
+        this.largeRotater.physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+    }
+
     // resets the breakable wall to its old position 
     resetBreakableWall(platformDimensions) 
     {
         let pos = this.platform.position;
         //first move all away 
-        for (let i = 1; i >= 0; i--) {
+        for (let i = 0; i < 2; i++) {
             for (let j = 0; j < 2; j++) {
-                this.breakableWall[i][j].setAbsolutePosition(new Vector3(5* j + pos.x,1000+5* i + 3 + pos.y, pos.z))
+                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
+                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-30 + 5* j + pos.x,5* i + 3 + pos.y, pos.z))
+                                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
             }
         }
         for (let i = 0; i < 2; i++) {
         for (let j = 0; j < 2; j++) {
-       this.breakableWall[i][j].setAbsolutePosition(new Vector3(5* j + pos.x,5* i + 3 + pos.y, pos.z))
+       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].position = new Vector3(5* j + pos.x,5* i + 3 + pos.y, pos.z)
+              this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
        // debugger;
     }
 }

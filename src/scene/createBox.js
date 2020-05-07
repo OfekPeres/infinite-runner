@@ -2,18 +2,10 @@ import {MeshBuilder, Vector3, PhysicsImpostor, Color3, StandardMaterial} from 'b
 
 const createRandomBox = function(scene, x, y, z)
 {
-        // Create Random Constants for Box Dimensions
         const scale = 15;
-        // const height = Math.random()*scale;
-        // const width  = Math.random()*scale;
-        // const depth  = Math.random()*scale;
         const height = 5
         const width = 5 
-        const depth = 5
-        // // Create Random Position for Box
-        // const x = Math.random()*100-50;
-        // const y = Math.random()*50;
-        // const z = Math.random()*100-50;
+        const depth = 10
 
         // Create Random Physical Properties for Box
         const friction    = Math.random()*10;
@@ -25,7 +17,6 @@ const createRandomBox = function(scene, x, y, z)
         box.position = new Vector3(x, y, z);
         const randomMaterial = new StandardMaterial("randomMaterial", scene);
         randomMaterial.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
-        // randomMaterial.emissiveColor = new Color3(Math.random(), Math.random(), Math.random());
         box.material = randomMaterial;
         box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
 
@@ -33,14 +24,14 @@ const createRandomBox = function(scene, x, y, z)
 };
 
 
-const createRotatingBox = (scene) =>
+const createRotatingBox = (scene, x, y, z) =>
 {
     const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 10, depth: 20});
     const mass = 1000;
 
     const friction = .05;
     const restitution = .1;
-    box.setAbsolutePosition(new Vector3(0, 6.5, 150));
+    box.setAbsolutePosition(new Vector3(x, y, z));
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
     box.material = material;
@@ -49,14 +40,14 @@ const createRotatingBox = (scene) =>
     return box;
 };
 
-const createRotatingBox2 = (scene) =>
+const createRotatingBox2 = (scene, x, y, z) =>
 {
-    const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 150, depth: 20});
+    const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 50, depth: 20});
     const mass = 1000;
 
     const friction = 0;
     const restitution = .1;
-    box.setAbsolutePosition(new Vector3(40, 6.5, 150));
+    box.setAbsolutePosition(new Vector3(x, y, z));
     // debugger;
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
