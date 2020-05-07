@@ -55,6 +55,7 @@ class Game
             const laneX = lane.lanePos.x;
             if (curPlatform.platform.position.z + depth < this.player.playerBox.position.z)
             {
+                
                 // Randomize Z position - place the new platform at the front of the lane + some random bonus
                 curPlatform.platform.position.z = lane.platforms[lane.platforms.length-1].platform.position.z + (depth) + 3*depth*Math.random();
 
@@ -68,8 +69,14 @@ class Game
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
-
-
+                
+                 if (curPlatform.hasBreakableWall) 
+                      {
+                        // debugger
+                    let a = curPlatform.breakableWall[0][0].position
+                    curPlatform.resetBreakableWall(platformDimensions);
+                    let b = curPlatform.breakableWall[0][0].position
+                     }
             }
 
         }

@@ -1,17 +1,19 @@
 import {MeshBuilder, Vector3, PhysicsImpostor, Color3, StandardMaterial} from 'babylonjs';
 
-const createRandomBox = function(scene)
+const createRandomBox = function(scene, x, y, z)
 {
         // Create Random Constants for Box Dimensions
         const scale = 15;
-        const height = Math.random()*scale;
-        const width  = Math.random()*scale;
-        const depth  = Math.random()*scale;
-
-        // Create Random Position for Box
-        const x = Math.random()*100-50;
-        const y = Math.random()*50;
-        const z = Math.random()*100-50;
+        // const height = Math.random()*scale;
+        // const width  = Math.random()*scale;
+        // const depth  = Math.random()*scale;
+        const height = 5
+        const width = 5 
+        const depth = 5
+        // // Create Random Position for Box
+        // const x = Math.random()*100-50;
+        // const y = Math.random()*50;
+        // const z = Math.random()*100-50;
 
         // Create Random Physical Properties for Box
         const friction    = Math.random()*10;
@@ -29,6 +31,7 @@ const createRandomBox = function(scene)
 
         return box;
 };
+
 
 const createRotatingBox = (scene) =>
 {

@@ -1,6 +1,5 @@
 import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3} from 'babylonjs';
 
-
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
@@ -21,6 +20,45 @@ const createLauncher = (scene, pos, platformDimensions) =>
 
 };
 
+const createRandomBox = function(scene, x, y, z)
+{
+        const scale = 15;
+        const height = 5
+        const width = 5 
+        const depth = 10
+
+        // Create Random Physical Properties for Box
+        const friction    = Math.random()*10;
+        const mass        = height*width*depth/scale;
+        const restitution = Math.random()*.7;
+
+        // Create Box
+        const box = MeshBuilder.CreateBox("Box", {height, width, depth}, scene);
+        box.position = new Vector3(x, y, z);
+        const randomMaterial = new StandardMaterial("randomMaterial", scene);
+        randomMaterial.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+        box.material = randomMaterial;
+        box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
+
+        return box;
+};
+
+const createBreakableWall = (scene, pos, platformDimensions) => {
+    const width = 10
+    const height = 10
+    const depth = 5
+    let wall = []
+    for (let i = 0; i < height; i += 5) {
+        let row = []
+        for (let j = 0; j < width; j += 5) {
+        let block = createRandomBox(scene, j + pos.x, i + 3 + pos.y, pos.z)
+        row.push(block)
+    }
+    wall.push(row)
+}
+return wall;
+}
+
 
 const createPlatform = (scene, pos, platformDimensions) =>
 {
@@ -38,17 +76,24 @@ const createPlatform = (scene, pos, platformDimensions) =>
 class Platform
 {
 
-    constructor(scene, pos, platformDimensions, hasLauncher=true)
+    constructor(scene, pos, platformDimensions, hasLauncher=false, hasBreakableWall=true)
     {
         // console.log("Initializing Platform in Platform");
         this.platform = createPlatform(scene, pos, platformDimensions);
         this.platformDimensions = platformDimensions;
         this.hasLauncher = hasLauncher;
+        this.hasBreakableWall = hasBreakableWall;
         if  (hasLauncher)
         {
             this.launcher = createLauncher(scene, pos, platformDimensions);
             this.resetLauncher();
         }
+        if (hasBreakableWall) {
+            this.breakableWall = createBreakableWall(scene, pos, platformDimensions)
+            // debugger;
+            this.resetBreakableWall(platformDimensions)
+        }
+
 
     }
 
@@ -75,6 +120,25 @@ class Platform
             const zRandShift = Math.random()*randRangeZ - randRangeZ/2;
             this.launcher.position.z += zRandShift;
         }
+    }
+
+    // resets the breakable wall to its old position 
+    resetBreakableWall(platformDimensions) 
+    {
+        let pos = this.platform.position;
+        //first move all away 
+        for (let i = 1; i >= 0; i--) {
+            for (let j = 0; j < 2; j++) {
+                this.breakableWall[i][j].setAbsolutePosition(new Vector3(5* j + pos.x,1000+5* i + 3 + pos.y, pos.z))
+            }
+        }
+        for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+       this.breakableWall[i][j].setAbsolutePosition(new Vector3(5* j + pos.x,5* i + 3 + pos.y, pos.z))
+       // debugger;
+    }
+}
+
     }
     // Check if the player mesh is in contact with any part of the platform
     intersectsPlatform(playerMesh)
