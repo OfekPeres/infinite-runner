@@ -5,11 +5,11 @@ const createRandomBox = function(scene, x, y, z)
         const scale = 15;
         const height = 5
         const width = 5 
-        const depth = 10
+        const depth = 5
 
         // Create Random Physical Properties for Box
         const friction    = Math.random()*10;
-        const mass        = height*width*depth/scale;
+        const mass        = 5;
         const restitution = Math.random()*.7;
 
         // Create Box

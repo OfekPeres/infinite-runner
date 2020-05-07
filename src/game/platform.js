@@ -24,14 +24,14 @@ const createLauncher = (scene, pos, platformDimensions) =>
 
 
 const createBreakableWall = (scene, pos, platformDimensions) => {
-    const width = 10
-    const height = 10
+    const width = 30
+    const height = 30
     const depth = 5
     let wall = []
     for (let i = 0; i < height; i += 5) {
         let row = []
         for (let j = 0; j < width; j += 5) {
-        let block = createRandomBox(scene, j + pos.x, i + 3 + pos.y, pos.z)
+        let block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z)
         row.push(block)
     }
     wall.push(row)
@@ -117,10 +117,10 @@ class Platform
     setObstacle() 
     {
         let r = Math.random()
-        if (r < 1) {
+        if (r < 0.8) {
             this.hasLauncher = true
         }
-        else if (r < 0) {
+        else if (r < 1) {
             this.hasBreakableWall = true
         }
         else if (r < .75) {
@@ -153,22 +153,21 @@ class Platform
     {
         let pos = this.platform.position;
         //first move all away 
-        for (let i = 0; i < 2; i++) {
-            for (let j = 0; j < 2; j++) {
-                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
-                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-30 + 5* j + pos.x,5* i + 3 + pos.y, pos.z))
-                                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
+        for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 6; j++) {
+                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x,5* i + 3 + pos.y, pos.z))
             }
         }
-        for (let i = 0; i < 2; i++) {
-        for (let j = 0; j < 2; j++) {
+        for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+
        this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
        this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].position = new Vector3(5* j + pos.x,5* i + 3 + pos.y, pos.z)
-              this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
+               this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
+
+       this.breakableWall[i][j].position = new Vector3(-15 +5* j + pos.x,5* i + 3 + pos.y, pos.z)
+       //        this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       // this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
        // debugger;
     }
 }
