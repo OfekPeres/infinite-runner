@@ -1,6 +1,6 @@
 import Lane from './lane';
 import { Vector3 } from 'babylonjs';
-
+import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
 
 // Define Relevant Game Constants
 const numPlatforms = 4;
@@ -40,7 +40,7 @@ class Game
             const curLane = new Lane(scene, numPlatforms, curLanePos, laneDimensions, platformDimensions);
             this.lanes.push(curLane);
         }
-
+        createScoreBoard();
     }
 
     // Make the game appear infinite
@@ -55,7 +55,6 @@ class Game
             const laneX = lane.lanePos.x;
             if (curPlatform.platform.position.z + depth < this.player.playerBox.position.z)
             {
-                
                 // Randomize Z position - place the new platform at the front of the lane + some random bonus
                 curPlatform.platform.position.z = lane.platforms[lane.platforms.length-1].platform.position.z + (depth) + 3*depth*Math.random();
 
@@ -69,18 +68,8 @@ class Game
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
-                 if (curPlatform.hasBreakableWall) 
-                      {
-                    curPlatform.resetBreakableWall(platformDimensions);
-                     }
-                 if (curPlatform.hasSmallRotater) 
-                 {
-                    curPlatform.resetSmallRotater()
-                 }
-                 if (curPlatform.hasLargeRotater)
-                 {
-                    curPlatform.resetLargeRotater()
-                 }
+
+
             }
 
         }
@@ -108,7 +97,7 @@ class Game
         // vel.x += curVel.x;
         // vel.y += curVel.y;
         // this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
-
+        updateScoreBoard(Math.round(this.player.playerBox.position.z));
     }
 
     handleLaunchers()
