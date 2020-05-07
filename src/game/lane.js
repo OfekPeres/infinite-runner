@@ -22,6 +22,7 @@ const initializePlatforms = (scene, numPlatforms, lanePos, laneDimensions, platf
 {
     // console.log("Initializing Platforms in Lane");
     const platforms = [];
+
     const startPos = lanePos.clone();
     for (let i = 0; i < numPlatforms; i++)
     {

@@ -1,19 +1,19 @@
 import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3} from 'babylonjs';
 import {createRandomBox, createRotatingBox, createRotatingBox2} from '../scene/createBox.js';
+import createTrampoline from '../scene/createTrampoline';
 
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
+    // const launcher = createTrampoline(scene);
     const width = platformDimensions.width/4;
     const height = platformDimensions.height/4;
     const depth = platformDimensions.depth/4;
     const launcher = MeshBuilder.CreateBox("launcher", {width, height, depth}, scene);
     const launchMat = new StandardMaterial("launchMat", scene);
-
     launcher.position = pos;
     launcher.position.y += height;
     launchMat.diffuseColor = new Color3(.7, 0, 0.1);
-    launchMat.backFaceCulling = false;
     launcher.material = launchMat;
     launcher.receiveShadows = true;
     launcher.physicsImpostor = new PhysicsImpostor(launcher, PhysicsImpostor.BoxImpostor, { mass: 10000, friction: .1, restitution: 0.7 }, scene);
