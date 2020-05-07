@@ -155,7 +155,12 @@ class Platform
         //first move all away 
         for (let i = 0; i < 6; i++) {
             for (let j = 0; j < 6; j++) {
+                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
                 this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x,5* i + 3 + pos.y, pos.z))
+                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
+                       this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
+
             }
         }
         for (let i = 0; i < 6; i++) {
