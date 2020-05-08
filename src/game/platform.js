@@ -7,7 +7,7 @@ const createLauncher = (scene, pos, platformDimensions) =>
 {
     const launcher = createTrampoline(scene);
     // const width = platformDimensions.width/4;
-    const height = platformDimensions.height/4;
+    const height = platformDimensions.height;
     // const depth = platformDimensions.depth/4;
     // const launcher = MeshBuilder.CreateBox("launcher", {width, height, depth}, scene);
     // const launchMat = new StandardMaterial("launchMat", scene);
@@ -100,8 +100,8 @@ class Platform
             this.launcher.position.y = this.platform.position.y + this.platformDimensions.height/4;
             this.launcher.position.z = this.platform.position.z;
             this.launcher.position.x = this.platform.position.x;
-            this.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-            this.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+            // this.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+            // this.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
             // Position launcher randomly on the platform - make sure that it won't hang over the edge
 
             const launcherWidth = this.platformDimensions.width/4;
@@ -166,12 +166,23 @@ class Platform
         {
             for (let j = 0; j < 6; j++)
             {
-                    this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
-                    this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x, 5* i + 3 + pos.y, pos.z));
-                    this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
-                    this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-                    this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
+                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
+                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x, 5* i + 3 + pos.y, pos.z));
+                this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+                this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
 
+            }
+        }
+        for (let i = 0; i < 6; i++)
+        {
+            for (let j = 0; j < 6; j++)
+            {
+
+                this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+                this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
+                this.breakableWall[i][j].position = new Vector3(-15 +5* j + pos.x, 5* i + 3 + pos.y, pos.z);
             }
         }
 

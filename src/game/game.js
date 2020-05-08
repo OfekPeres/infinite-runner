@@ -119,7 +119,7 @@ class Game
                 const curPlatform = lane.platforms[i];
                 if (curPlatform.hasLauncher && this.player.playerBox.intersectsMesh(curPlatform.launcher))
                 {
-                    const impulse  = new Vector3(0, 300, 0);
+                    const impulse  = new Vector3(0, 100, 0);
                     this.player.playerBox.physicsImpostor.applyImpulse(impulse, this.player.playerBox.getAbsolutePosition());
                 }
             }
