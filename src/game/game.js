@@ -68,7 +68,7 @@ class Game
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
-                 if (curPlatform.hasBreakableWall)
+                if (curPlatform.hasBreakableWall)
                 {
                     curPlatform.resetBreakableWall(platformDimensions);
                 }
