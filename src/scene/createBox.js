@@ -1,16 +1,16 @@
 import {MeshBuilder, Vector3, PhysicsImpostor, Color3, StandardMaterial} from 'babylonjs';
 
-const createRandomBox = function(scene, x, y, z)
+const createRandomBox = function(scene, x, y, z, widthScale)
 {
         const scale = 15;
-        const height = 5
+        const height = 5 
         const width = 5 
-        const depth = 5
+        const depth = 5 *widthScale
 
         // Create Random Physical Properties for Box
-        const friction    = Math.random()*10;
-        const mass        = 5;
-        const restitution = Math.random()*.7;
+        const friction    = 10;
+        const mass        = 1000;
+        const restitution = 0;
 
         // Create Box
         const box = MeshBuilder.CreateBox("Box", {height, width, depth}, scene);
@@ -27,10 +27,10 @@ const createRandomBox = function(scene, x, y, z)
 const createRotatingBox = (scene, x, y, z) =>
 {
     const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 10, depth: 20});
-    const mass = 1000;
+    const mass = 10000;
 
-    const friction = .05;
-    const restitution = .1;
+    const friction = 0;
+    const restitution = 0;
     box.setAbsolutePosition(new Vector3(x, y, z));
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
@@ -43,10 +43,10 @@ const createRotatingBox = (scene, x, y, z) =>
 const createRotatingBox2 = (scene, x, y, z) =>
 {
     const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 50, depth: 20});
-    const mass = 1000;
+    const mass = 10000;
 
     const friction = 0;
-    const restitution = .1;
+    const restitution = 0;
     box.setAbsolutePosition(new Vector3(x, y, z));
     // debugger;
     const material = new StandardMaterial("material", scene);

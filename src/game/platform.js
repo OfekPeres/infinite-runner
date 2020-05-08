@@ -34,7 +34,7 @@ const createBreakableWall = (scene, pos, platformDimensions) =>
         const row = [];
         for (let j = 0; j < width; j += 5)
         {
-            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z);
+            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z, (height - i)/15 );
             row.push(block);
         }
         wall.push(row);
@@ -143,7 +143,8 @@ class Platform
     {
         const pos = this.platform.position;
         this.smallRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z);
-        this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 200, 0));
+        this.smallRotater.physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+        this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 150, 0));
 
 
 
