@@ -9,6 +9,7 @@ const laneDimensions     = {width: platformDimensions.width*3};
 
 
 const SPEED = 15;
+const MAX_SPEED = 2 * SPEED;
 const left    = new Vector3(-1, 0, 0);
 const right   = new Vector3(1, 0, 0);
 const forward = new Vector3(0, 0, 1);
@@ -44,7 +45,6 @@ class Game
     }
 
     // Make the game appear infinite
-    // MAKE SURE TO ADD A SHIFT IN THE X POSITION AS WELL AS THE Z POSTION. ***************************************
     extendTrack()
     {
         const depth = platformDimensions.depth;
@@ -64,12 +64,22 @@ class Game
                 const xRandShift = Math.random()*randRangeX - randRangeX/2;
                 curPlatform.platform.position.x = laneX + xRandShift;
                 // Randomize Y position
-
+                // TO BE IMPLEMENTED - MAYBE BASED ON DIFFICULTY OR SOMETHING
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
-
-
+                 if (curPlatform.hasBreakableWall)
+                {
+                    curPlatform.resetBreakableWall(platformDimensions);
+                }
+                if (curPlatform.hasSmallRotater)
+                {
+                    curPlatform.resetSmallRotater();
+                }
+                if (curPlatform.hasLargeRotater)
+                {
+                    curPlatform.resetLargeRotater();
+                }
             }
 
         }
@@ -90,6 +100,7 @@ class Game
         // Check if player is in contact with a launcher
         this.handleLaunchers();
 
+<<<<<<< HEAD
         // Update Player's Velocity to move forward
         // debugger
         // const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
@@ -98,6 +109,8 @@ class Game
         // vel.y += curVel.y;
         // this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
         updateScoreBoard(Math.round(this.player.playerBox.position.z));
+=======
+>>>>>>> Added trampolines to our platforms, potentially fixed velocity issue, updated platforms to not have obstacles if they are the original platforms
     }
 
     handleLaunchers()
@@ -157,7 +170,7 @@ class Game
     handleKeyPress(keyMap)
     {
         // Calculate velocity
-        const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(.7);
+        const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(1);
         // AWSD Controls
         velocity.addInPlace(directionMap.left.scale(keyMap.a * SPEED));
         velocity.addInPlace(directionMap.right.scale(keyMap.d * SPEED));
@@ -171,6 +184,10 @@ class Game
         velocity.addInPlace(directionMap.back.scale(keyMap.ArrowDown * SPEED));
         // velocity.addInPlace(directionMap.up.scale(-2));
         // Update Player's Velocity
+
+        velocity.x = Math.min(velocity.x, MAX_SPEED);
+        velocity.y = Math.min(velocity.y, MAX_SPEED);
+        velocity.z = Math.min(velocity.z, MAX_SPEED);
         this.player.playerBox.physicsImpostor.setLinearVelocity(velocity);
 
         // Handle Jump

@@ -1,4 +1,4 @@
-import {Engine, Vector3} from 'babylonjs';
+import {Engine, Vector3, AssetsManager} from 'babylonjs';
 
 import createScene from './createScene';
 import createLighting from './createLighting';
@@ -19,10 +19,12 @@ import createTrampoline from "./createTrampoline";
 >>>>>>> Added trampolines but can't get reference to them
 
 const main = () => {
+    // Initialize a BabylonJS Scene
     const canvas = document.getElementById('game-canvas');
     canvas.focus();
     const engine = new Engine(canvas, true);
     const scene = createScene(engine);
+<<<<<<< HEAD
     createLighting(scene);
     // const platforms = createInfiniteTrack(scene);
     const player = new Player(scene);
@@ -85,6 +87,41 @@ const main = () => {
         game.update();
         scene.render();
     });
+=======
+    // Load Assets (3D Models, etc)
+    const assetsManager = new AssetsManager(scene);
+
+    const meshTask = assetsManager.addMeshTask("trampoline", "", "/src/assets/", "Trampoline.obj");
+
+    meshTask.onSuccess = function(task)
+    {
+        const trampoline = task.loadedMeshes[1];
+        trampoline.isVisible = false;
+        trampoline.position.y = -100;
+        window.trampoline = trampoline;
+
+    };
+
+    assetsManager.useDefaultLoadingScreen = true;
+    engine.loadingUIText = "Loading 3D Models! Game will be ready soon!";
+    assetsManager.onFinish = () => {
+
+        // Initialize player and game objects once all assets have been loaded
+        createLighting(scene);
+        const player = new Player(scene);
+        createCamera(scene, canvas, player);
+        const game = new Game(scene, player, 3);
+        handleKeyboard(scene, game);
+        handleResize(engine);
+
+        engine.runRenderLoop(function() {
+
+            game.update();
+            scene.render();
+        });
+    };
+    assetsManager.load();
+>>>>>>> Added trampolines to our platforms, potentially fixed velocity issue, updated platforms to not have obstacles if they are the original platforms
 
 };
 

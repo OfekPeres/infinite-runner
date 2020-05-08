@@ -5,39 +5,42 @@ import createTrampoline from '../scene/createTrampoline';
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
-    // const launcher = createTrampoline(scene);
-    const width = platformDimensions.width/4;
+    const launcher = createTrampoline(scene);
+    // const width = platformDimensions.width/4;
     const height = platformDimensions.height/4;
-    const depth = platformDimensions.depth/4;
-    const launcher = MeshBuilder.CreateBox("launcher", {width, height, depth}, scene);
-    const launchMat = new StandardMaterial("launchMat", scene);
+    // const depth = platformDimensions.depth/4;
+    // const launcher = MeshBuilder.CreateBox("launcher", {width, height, depth}, scene);
+    // const launchMat = new StandardMaterial("launchMat", scene);
     launcher.position = pos;
     launcher.position.y += height;
-    launchMat.diffuseColor = new Color3(.7, 0, 0.1);
-    launcher.material = launchMat;
-    launcher.receiveShadows = true;
-    launcher.physicsImpostor = new PhysicsImpostor(launcher, PhysicsImpostor.BoxImpostor, { mass: 10000, friction: .1, restitution: 0.7 }, scene);
+    // launchMat.diffuseColor = new Color3(.7, 0, 0.1);
+    // launcher.material = launchMat;
+    // launcher.receiveShadows = true;
+    // launcher.physicsImpostor = new PhysicsImpostor(launcher, PhysicsImpostor.BoxImpostor, { mass: 10000, friction: .1, restitution: 0.7 }, scene);
     return launcher;
 
 };
 
 
 
-const createBreakableWall = (scene, pos, platformDimensions) => {
-    const width = 30
-    const height = 30
-    const depth = 5
-    let wall = []
-    for (let i = 0; i < height; i += 5) {
-        let row = []
-        for (let j = 0; j < width; j += 5) {
-        let block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z)
-        row.push(block)
+const createBreakableWall = (scene, pos, platformDimensions) =>
+{
+    const width = 30;
+    const height = 30;
+    // const depth = 5;
+    const wall = [];
+    for (let i = 0; i < height; i += 5)
+    {
+        const row = [];
+        for (let j = 0; j < width; j += 5)
+        {
+            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z);
+            row.push(block);
+        }
+        wall.push(row);
     }
-    wall.push(row)
-}
-return wall;
-}
+    return wall;
+};
 
 
 const createPlatform = (scene, pos, platformDimensions) =>
@@ -56,34 +59,34 @@ const createPlatform = (scene, pos, platformDimensions) =>
 class Platform
 {
 
-    constructor(scene, pos, platformDimensions)
+    constructor(scene, pos, platformDimensions, hasObstacles)
     {
-        // console.log("Initializing Platform in Platform");
+        // Initialize Instance Variables
         this.platform = createPlatform(scene, pos, platformDimensions);
         this.platformDimensions = platformDimensions;
         this.hasLauncher = false;
         this.hasBreakableWall = false;
         this.hasLargeRotater = false;
         this.hasSmallRotater = false;
-        this.setObstacle()
+        this.setObstacle(hasObstacles);
         if  (this.hasLauncher)
         {
             this.launcher = createLauncher(scene, pos, platformDimensions);
             this.resetLauncher();
         }
-        if (this.hasBreakableWall) {
-            this.breakableWall = createBreakableWall(scene, pos, platformDimensions)
-            // debugger;
-            this.resetBreakableWall(platformDimensions)
-        }
-        if (this.hasSmallRotater) 
+        if (this.hasBreakableWall)
         {
-            this.smallRotater = createRotatingBox(scene, pos.x, pos.y + 10.5, pos.z)
+            this.breakableWall = createBreakableWall(scene, pos, platformDimensions);
+            this.resetBreakableWall(platformDimensions);
+        }
+        if (this.hasSmallRotater)
+        {
+            this.smallRotater = createRotatingBox(scene, pos.x, pos.y + 10.5, pos.z);
         }
 
-        if (this.hasLargeRotater) 
+        if (this.hasLargeRotater)
         {
-            this.largeRotater = createRotatingBox2(scene, pos.x, pos.y + 10.5, pos.z)
+            this.largeRotater = createRotatingBox2(scene, pos.x, pos.y + 10.5, pos.z);
         }
 
 
@@ -114,26 +117,32 @@ class Platform
         }
     }
 
-    setObstacle() 
+    setObstacle(hasObstacles)
     {
-        let r = Math.random()
-        if (r < 0.8) {
-            this.hasLauncher = true
+        if (!hasObstacles)
+        {
+            return;
         }
-        else if (r < 1) {
-            this.hasBreakableWall = true
+        const r = Math.random();
+        if (r < 0.2) {
+            this.hasLauncher = true;
         }
-        else if (r < .75) {
+        else if (r < .4) {
+            this.hasBreakableWall = true;
+        }
+        else if (r < .6) {
             this.hasLargeRotater = true;
         }
-        else 
+        else if (r < .8)
+        {
             this.hasSmallRotater = true;
+        }
     }
 
     resetSmallRotater()
     {
-        let pos = this.platform.position
-        this.smallRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z)
+        const pos = this.platform.position;
+        this.smallRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z);
         this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 200, 0));
 
 
@@ -142,40 +151,29 @@ class Platform
 
     resetLargeRotater()
     {
-        let pos = this.platform.position
-        this.largeRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z)
+        const pos = this.platform.position;
+        this.largeRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z);
         this.largeRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 1, 0));
-        this.largeRotater.physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
+        this.largeRotater.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
     }
 
-    // resets the breakable wall to its old position 
-    resetBreakableWall(platformDimensions) 
+    // resets the breakable wall to its old position
+    resetBreakableWall(platformDimensions)
     {
-        let pos = this.platform.position;
-        //first move all away 
-        for (let i = 0; i < 6; i++) {
-            for (let j = 0; j < 6; j++) {
-                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
-                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x,5* i + 3 + pos.y, pos.z))
-                       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
-                       this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
+        const pos = this.platform.position;
+        //first move all away
+        for (let i = 0; i < 6; i++)
+        {
+            for (let j = 0; j < 6; j++)
+            {
+                    this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
+                    this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x, 5* i + 3 + pos.y, pos.z));
+                    this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+                    this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+                    this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
 
             }
         }
-        for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 6; j++) {
-
-       this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
-               this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1,0))
-
-       this.breakableWall[i][j].position = new Vector3(-15 +5* j + pos.x,5* i + 3 + pos.y, pos.z)
-       //        this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-       // this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0,0,0))
-       // debugger;
-    }
-}
 
     }
     // Check if the player mesh is in contact with any part of the platform
@@ -189,11 +187,16 @@ class Platform
         {
             return true;
         }
+        if (this.hasSmallRotater && playerMesh.intersectsMesh(this.smallRotater))
+        {
+            return true;
+        }
+
+        if (this.hasLargeRotater && playerMesh.intersectsMesh(this.largeRotater))
+        {
+            return true;
+        }
         return false;
-    }
-    intersectsLauncher(playerMesh)
-    {
-        return this.hasLauncher && playerMesh.intersectsMesh(this.launcher);
     }
 }
 

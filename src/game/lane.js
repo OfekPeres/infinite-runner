@@ -34,7 +34,8 @@ const initializePlatforms = (scene, numPlatforms, lanePos, laneDimensions, platf
         }
         // Check if first element (i === 0) for determining hasLauncher and whether it should have any offset from the origin
         const pos = calculatePlatformPos(startPos, laneDimensions, i===0);
-        const curPlatform = new Platform(scene, pos, platformDimensions);//i!==0);
+        const hasObstacles = i !== 0;
+        const curPlatform = new Platform(scene, pos, platformDimensions, hasObstacles);
         platforms.push(curPlatform);
     }
     return platforms;
