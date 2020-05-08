@@ -100,7 +100,6 @@ class Game
         // Check if player is in contact with a launcher
         this.handleLaunchers();
 
-<<<<<<< HEAD
         // Update Player's Velocity to move forward
         // debugger
         // const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
@@ -109,8 +108,6 @@ class Game
         // vel.y += curVel.y;
         // this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
         updateScoreBoard(Math.round(this.player.playerBox.position.z));
-=======
->>>>>>> Added trampolines to our platforms, potentially fixed velocity issue, updated platforms to not have obstacles if they are the original platforms
     }
 
     handleLaunchers()
