@@ -1,5 +1,5 @@
 import Lane from './lane';
-import { Vector3 } from 'babylonjs';
+import { Vector3, Color3 } from 'babylonjs';
 import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
 
 // Define Relevant Game Constants
@@ -29,6 +29,7 @@ class Game
         this.player = player;
         this.scene = scene;
         this.gameState = initialGameState;
+        this.milestone = 2000
 
         // Initialize Lanes
         this.lanes = [];
@@ -53,6 +54,7 @@ class Game
         {
             const curPlatform = lane.platforms[0];
             const laneX = lane.lanePos.x;
+
             if (curPlatform.platform.position.z + depth < this.player.playerBox.position.z)
             {
                 // Randomize Z position - place the new platform at the front of the lane + some random bonus
@@ -63,8 +65,16 @@ class Game
                 const randRangeX = laneWidth - platformDimensions.width;
                 const xRandShift = Math.random()*randRangeX - randRangeX/2;
                 curPlatform.platform.position.x = laneX + xRandShift;
-                // Randomize Y position
-                // TO BE IMPLEMENTED - MAYBE BASED ON DIFFICULTY OR SOMETHING
+
+                // Randomize Y position - if player is past 2000
+                if (this.player.playerBox.position.z > this.milestone)
+                {
+                    const laneY = lane.lanePos.y;
+                    const randRangeY = 100;
+                    const yRandShift = Math.random()*randRangeY - randRangeY/2;
+                    curPlatform.platform.position.y = laneY + yRandShift;
+                }
+
                 curPlatform.resetLauncher();
                 lane.platforms.push(lane.platforms.shift());
 
@@ -88,28 +98,31 @@ class Game
     // Update everything before render
     update()
     {
-        this.extendTrack();
-        this.checkIfDied();
-        // Check if in contact with the ground, if so, reset jump count
         const onGround = this.checkOnGround();
         if (onGround)
         {
             this.gameState.numJumps = 0;
         }
-
+        this.extendTrack();
         // Check if player is in contact with a launcher
         this.handleLaunchers();
+        this.checkIfDied();
+        // Check if in contact with the ground, if so, reset jump count
+        this.dampPlayerRotation();
 
-        // Update Player's Velocity to move forward
-        // debugger
-        // const curVel = this.player.playerBox.physicsImpostor.getLinearVelocity();
-        // const vel = new Vector3(0, 0, SPEED*2);
-        // vel.x += curVel.x;
-        // vel.y += curVel.y;
-        // this.player.playerBox.physicsImpostor.setLinearVelocity(vel);
+
         updateScoreBoard(Math.round(this.player.playerBox.position.z));
+        this.updateBackGround();
     }
 
+    updateBackGround()
+    {
+        const curPos = this.player.playerBox.position;
+        const r = Math.min(curPos.z /5000, .3);
+        const g = Math.min(curPos.z/ 10000, .6);
+        const b = Math.min(curPos.z/ 20000, 1);
+        this.scene.clearColor = new Color3(r, g, b);
+    }
     handleLaunchers()
     {
         for (const lane of this.lanes)
@@ -144,7 +157,7 @@ class Game
     }
     checkIfDied()
     {
-        if (this.player.playerBox.position.y < -40)
+        if (this.player.playerBox.position.y < -200 || Math.abs(this.player.playerBox.position.x) > 1000)
         {
             this.player.resetPlayer(this.lanes[1].platforms[0]);
         }
@@ -164,6 +177,13 @@ class Game
 
 
     }
+
+    dampPlayerRotation()
+    {
+        const curAngularVel = this.player.playerBox.physicsImpostor.getAngularVelocity();
+        this.player.playerBox.physicsImpostor.setAngularVelocity(curAngularVel.scale(0.97));
+    }
+
     handleKeyPress(keyMap)
     {
         // Calculate velocity

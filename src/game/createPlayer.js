@@ -15,7 +15,7 @@ class Player
         this.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
         this.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
         this.playerBox.position = curPlatform.platform.position.clone();
-        this.playerBox.position.y = 40;
+        this.playerBox.position.y = curPlatform.platform.position.y + 40;
 
     }
 
