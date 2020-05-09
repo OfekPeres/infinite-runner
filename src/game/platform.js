@@ -2,7 +2,6 @@ import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3, Texture
 import {createRandomBox, createRotatingBox, createRotatingBox2} from '../scene/createBox.js';
 import createTrampoline from '../scene/createTrampoline';
 
-import nebula from '../assets/nebula.jpg';
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
