@@ -14,6 +14,7 @@ import Game from '../game/game';
 // import Lane from '../game/lane';
 
 import createTrampoline from "./createTrampoline";
+// import TrampolineObj from '../assets/Trampoline.obj';
 
 const main = () => {
     const canvas = document.getElementById('game-canvas');
@@ -24,7 +25,7 @@ const main = () => {
     // Load Assets (3D Models, etc)
     const assetsManager = new AssetsManager(scene);
 
-    const meshTask = assetsManager.addMeshTask("trampoline", "", "/src/assets/", "Trampoline.obj");
+    const meshTask = assetsManager.addMeshTask("trampoline", "", "", 'https://raw.githubusercontent.com/OfekPeres/infinite-runner/master/src/assets/Trampoline.obj');
 
     meshTask.onSuccess = function(task)
     {

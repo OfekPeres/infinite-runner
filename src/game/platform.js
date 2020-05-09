@@ -1,7 +1,8 @@
-import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3} from 'babylonjs';
+import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3, Texture} from 'babylonjs';
 import {createRandomBox, createRotatingBox, createRotatingBox2} from '../scene/createBox.js';
 import createTrampoline from '../scene/createTrampoline';
 
+import nebula from '../assets/nebula.jpg';
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
@@ -34,7 +35,7 @@ const createBreakableWall = (scene, pos, platformDimensions) =>
         const row = [];
         for (let j = 0; j < width; j += 5)
         {
-            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z, (height - i)/15 );
+            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z, (height - i)/15);
             row.push(block);
         }
         wall.push(row);
@@ -48,11 +49,17 @@ const createPlatform = (scene, pos, platformDimensions) =>
     const platform = MeshBuilder.CreateBox("Platform", { width: platformDimensions.width, height: platformDimensions.height, depth: platformDimensions.depth}, scene);
     platform.position = pos;
     const platformMat = new StandardMaterial("platformMat", scene);
-    platformMat.diffuseColor = new Color3(0.5, 0.5, 0.5);
-    // platformMat.emissiveColor = new Color3(0.2, 0.2, 0.2);
+    platformMat.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+    platformMat.emissiveColor = new Color3(0.1, 0.6, 0.2);
+    // const cloudTexture = new Texture("https://raw.githubusercontent.com/BabylonJS/Babylon.js/master/Playground/textures/cloud.png", scene);
+    // const cloudTexture = new Texture(nebula, scene);
+    // platformMat.diffuseTexture = cloudTexture;
+    // platformMat.wireframe = true;
+    // platformMat.diffuseTexture.hasAlpha = true;
     platformMat.backFaceCulling = false;
     platform.material = platformMat;
     platform.receiveShadows = true;
+
     platform.physicsImpostor = new PhysicsImpostor(platform, PhysicsImpostor.BoxImpostor, { mass: 0, friction: .15, restitution: 0.7 }, scene);
     return platform;
 };

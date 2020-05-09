@@ -46,6 +46,7 @@ module.exports = {
                   'css-loader'
                 ]
             }
+
         ],
     },
     resolve: {

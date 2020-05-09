@@ -7,6 +7,8 @@ const createScene = (engine) => {
     // scene.getPhysicsEngine().setGravity(g);
     scene.getPhysicsEngine().setTimeStep(1/20);
     scene.clearColor = new Color3(0, 0, 0.2);
+
+
     return scene;
 };
 
