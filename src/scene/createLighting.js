@@ -5,6 +5,7 @@ const createLighting = (scene) => {
     light.diffuse = new Color3(1, 1, 1);
     light.specular = new Color3(1, 1, 1);
     light.groundColor = new Color3(0, 0, 0);
+
 };
 
 

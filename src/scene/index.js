@@ -1,4 +1,4 @@
-import {Engine, Vector3, AssetsManager} from 'babylonjs';
+import {Engine, Vector3, AssetsManager, StandardMaterial, MeshBuilder, Texture, Mesh} from 'babylonjs';
 
 
 import createScene from './createScene';
@@ -15,6 +15,8 @@ import Game from '../game/game';
 
 import createTrampoline from "./createTrampoline";
 // import TrampolineObj from '../assets/Trampoline.obj';
+
+import lava from "../assets/lava2.jpeg";
 
 const main = () => {
     window.resetGame = false;
@@ -50,6 +52,14 @@ const main = () => {
 
         handleKeyboard(scene, game);
         handleResize(engine);
+
+
+
+
+
+
+
+
 
         engine.runRenderLoop(function()
         {

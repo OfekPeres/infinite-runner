@@ -1,7 +1,7 @@
-import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3, Texture} from 'babylonjs';
+import {MeshBuilder, StandardMaterial, PhysicsImpostor, Color3, Vector3, Texture, PBRMaterial} from 'babylonjs';
 import {createRandomBox, createRotatingBox, createRotatingBox2} from '../scene/createBox.js';
 import createTrampoline from '../scene/createTrampoline';
-
+import basalt from "../assets/basalt.png"
 // Create a smaller platform that will jump vertically
 const createLauncher = (scene, pos, platformDimensions) =>
 {
@@ -15,41 +15,54 @@ const createLauncher = (scene, pos, platformDimensions) =>
 };
 
 
-
-const createBreakableWall = (scene, pos, platformDimensions) =>
-{
-    const width = 30;
-    const height = 30;
-    // const depth = 5;
-    const wall = [];
-    for (let i = 0; i < height; i += 5)
-    {
-        const row = [];
-        for (let j = 0; j < width; j += 5)
-        {
-            const block = createRandomBox(scene, -width/2 + j + pos.x, i + 3 + pos.y, pos.z, (height - i)/15);
-            row.push(block);
-        }
-        wall.push(row);
-    }
-    return wall;
-};
-
-
 const createPlatform = (scene, pos, platformDimensions) =>
 {
     const platform = MeshBuilder.CreateBox("Platform", { width: platformDimensions.width, height: platformDimensions.height, depth: platformDimensions.depth}, scene);
     platform.position = pos;
     const platformMat = new StandardMaterial("platformMat", scene);
-    platformMat.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+    // platformMat.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
     platformMat.emissiveColor = new Color3(0.1, 0.6, 0.2);
     platformMat.backFaceCulling = false;
+    platformMat.diffuseTexture = new Texture(basalt, scene);
     platform.material = platformMat;
     platform.receiveShadows = true;
 
     platform.physicsImpostor = new PhysicsImpostor(platform, PhysicsImpostor.BoxImpostor, { mass: 0, friction: .15, restitution: 0.7 }, scene);
     return platform;
 };
+
+
+
+const createFallingSphere = (scene, platformPos, platformDimensions) =>
+{
+    const sphere = MeshBuilder.CreateSphere("Sphere", {diameter: 5+ 5*Math.random()}, scene);
+
+    const fallingAreaX = platformDimensions.width*2;
+    const fallingAreaZ = platformDimensions.depth*2;
+    const fallingAreaY = 200;
+    const xShift = (Math.random()*2-1)* fallingAreaX;
+    const zShift = (Math.random()*2-1)* fallingAreaZ;
+    const yShift = 50 + Math.random()*fallingAreaY;
+
+    const mass = Math.random()*500;
+    const restitution = Math.random();
+    sphere.position        = new Vector3(platformPos.x + xShift, platformPos.y + yShift, platformPos.z + zShift);
+    sphere.physicsImpostor = new PhysicsImpostor(sphere, PhysicsImpostor.SphereImpostor, {mass, restitution}, scene);
+
+    const pbr = new PBRMaterial("pbr", scene);
+    pbr.metallic = 0.0;
+    pbr.roughness = 0;
+    pbr.subSurface.isRefractionEnabled = true;
+    pbr.subSurface.indexOfRefraction = .2;
+    pbr.alpha = .7;
+    pbr.emissiveColor = new Color3(0, 0, Math.random());
+    pbr.ambientColor = new Color3(0, 0, Math.random());
+    sphere.material = pbr;
+    return sphere;
+};
+
+
+
 class Platform
 {
 
@@ -59,19 +72,15 @@ class Platform
         this.platform = createPlatform(scene, pos, platformDimensions);
         this.platformDimensions = platformDimensions;
         this.hasLauncher = false;
-        this.hasBreakableWall = false;
+
         this.hasLargeRotater = false;
         this.hasSmallRotater = false;
+        this.hasRainingObstacles = false;
         this.setObstacle(hasObstacles);
         if  (this.hasLauncher)
         {
             this.launcher = createLauncher(scene, pos, platformDimensions);
             this.resetLauncher();
-        }
-        if (this.hasBreakableWall)
-        {
-            this.breakableWall = createBreakableWall(scene, pos, platformDimensions);
-            this.resetBreakableWall(platformDimensions);
         }
         if (this.hasSmallRotater)
         {
@@ -82,6 +91,17 @@ class Platform
         {
             this.largeRotater = createRotatingBox2(scene, pos.x, pos.y + 10.5, pos.z);
         }
+        if (this.hasRainingObstacles)
+        {
+            const numSpheres = 10 + Math.random()*10;
+            this.rain = [];
+            for (let i = 0; i < numSpheres; i++)
+            {
+                const sphere = createFallingSphere(scene, pos, platformDimensions);
+                this.rain.push(sphere);
+            }
+        }
+
 
 
     }
@@ -94,7 +114,7 @@ class Platform
             this.launcher.position.y = this.platform.position.y + this.platformDimensions.height/4;
             this.launcher.position.z = this.platform.position.z;
             this.launcher.position.x = this.platform.position.x;
-            
+
             // Position launcher randomly on the platform - make sure that it won't hang over the edge
             const launcherWidth = this.platformDimensions.width/4;
             const randRangeX = this.platformDimensions.width - launcherWidth;
@@ -116,11 +136,11 @@ class Platform
             return;
         }
         const r = Math.random();
-        if (r < 0.2) {
+        if (r < 0.3) {
             this.hasLauncher = true;
         }
         else if (r < .4) {
-            this.hasBreakableWall = true;
+            this.hasRainingObstacles = true;
         }
         else if (r < .6) {
             this.hasLargeRotater = true;
@@ -158,36 +178,7 @@ class Platform
         this.largeRotater.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
     }
 
-    // resets the breakable wall to its old position
-    resetBreakableWall(platformDimensions)
-    {
-        const pos = this.platform.position;
-        //first move all away
-        for (let i = 0; i < 6; i++)
-        {
-            for (let j = 0; j < 6; j++)
-            {
-                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
-                this.breakableWall[i][j].setAbsolutePosition(new Vector3(-300 + 5* j + pos.x, 5* i + 3 + pos.y, pos.z));
-                this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
-                this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
 
-            }
-        }
-        for (let i = 0; i < 6; i++)
-        {
-            for (let j = 0; j < 6; j++)
-            {
-
-                this.breakableWall[i][j].physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
-                this.breakableWall[i][j].physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-                this.breakableWall[i][j].alignWithNormal(new Vector3(0, 1, 0));
-                this.breakableWall[i][j].position = new Vector3(-15 +5* j + pos.x, 5* i + 3 + pos.y, pos.z);
-            }
-        }
-
-    }
     // Check if the player mesh is in contact with any part of the platform
     intersectsPlatform(playerMesh)
     {
@@ -211,9 +202,37 @@ class Platform
         return false;
     }
 
+    updateRain(curZ)
+    {
+        if (!this.hasRainingObstacles)
+        {
+            return;
+        }
+        const lava = -50;
+        for (const sphere of this.rain)
+        {
+            if (sphere.position.y > lava)
+            {
+                continue;
+            }
+            sphere.position.copyFrom(this.platform.position);
+            const fallingAreaX = this.platformDimensions.width*2;
+            const fallingAreaZ = this.platformDimensions.depth*2;
+            const fallingAreaY = 200;
+            const xShift = (Math.random()*2-1)* fallingAreaX;
+            const zShift = (Math.random()*2-1)* fallingAreaZ;
+            const yShift = 50 + Math.random()*fallingAreaY;
+
+            sphere.position.x += xShift;
+            sphere.position.y += yShift;
+            sphere.position.z += zShift;
+            sphere.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+            sphere.physicsImpostor.mass = 10 + curZ / 10;
+
+        }
+    }
     resetPlatform()
     {
-        this.platform.material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
         this.resetSmallRotater();
         this.resetLargeRotater();
         this.resetLauncher();

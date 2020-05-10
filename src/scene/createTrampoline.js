@@ -1,22 +1,22 @@
 import 'babylonjs-loaders';
-import {StandardMaterial, Vector3, Color3, PhysicsImpostor} from 'babylonjs';
-
-
-
+import {PBRMaterial, Vector3, Color3} from 'babylonjs';
 
 const createTrampoline = (scene) => {
     // Initialize a trampoline as a clone of the original
     const trampoline = window.trampoline.clone();
     trampoline.isVisible = true;
-    const mass = 0;
-    const friction = 1;
-    const restitution = 0;
 
     trampoline.scaling = new Vector3(2, 2, 2);
-    const material = new StandardMaterial("material", scene);
-    material.diffuseColor = new Color3(1, Math.random(), Math.random());
-    trampoline.material = material;
-    // trampoline.physicsImpostor = new PhysicsImpostor(trampoline, PhysicsImpostor.CylinderImpostor, { mass, friction, restitution }, scene);
+    const pbr = new PBRMaterial("pbr", scene);
+    pbr.metallic = 0.0;
+    pbr.roughness = 0;
+    pbr.subSurface.isRefractionEnabled = true;
+    pbr.subSurface.indexOfRefraction = .2;
+    pbr.alpha = .7;
+    pbr.emissiveColor = new Color3(0, 0, Math.random());
+    pbr.ambientColor = new Color3(0, 0, Math.random());
+    trampoline.material = pbr;
+    trampoline.material = pbr;
     return trampoline;
 };
 

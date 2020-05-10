@@ -1,8 +1,11 @@
 import Lane from './lane';
-import { Vector3, Color3 } from 'babylonjs';
+import { Vector3, Color3, MeshBuilder, Texture, StandardMaterial } from 'babylonjs';
 import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
 import {createLifeBar, updateLifeBar} from '../modals/lifebar';
 import {createGameOverModal, updateGameOverModal} from '../modals/gameover';
+
+import lava from "../assets/lava2.jpeg";
+
 // Define Relevant Game Constants
 const numPlatforms = 5;
 const platformDimensions = {width: 50, height: 1, depth: 50};
@@ -20,6 +23,29 @@ const up      = new Vector3(0, 1, 0);
 const directionMap = {left, right, forward, back, up};
 
 
+
+const createLavaFloor = (scene) =>
+{
+
+    const mat = new StandardMaterial("", scene);
+    mat.diffuseTexture = new Texture(lava, scene);
+    const options = {
+        width: 100*12,
+        height: 300*12,
+        tileSize: 200,
+        tileWidth: 200
+    };
+
+    const mesh = MeshBuilder.CreateTiledPlane("", options, scene);
+    mesh.rotate(new Vector3(1, 0, 0), Math.PI/2);
+    mesh.material = mat;
+    mesh.position.y = -60;
+    return mesh;
+};
+
+
+
+
 // Define Initial Game State
 const initialGameState = {numJumps: 0, cameraIsUpdated: false, numLives: 3, gameOver: false};
 
@@ -31,7 +57,7 @@ class Game
         this.scene = scene;
         this.gameState = initialGameState;
         this.milestone = 5000;
-
+        this.lavaFloor = createLavaFloor(this.scene);
         // Initialize Lanes
         this.lanes = [];
         const lanePos = new Vector3(0, -5, 0);
@@ -78,21 +104,9 @@ class Game
                     curPlatform.platform.position.y = laneY + yRandShift;
                 }
 
-                curPlatform.resetLauncher();
-                lane.platforms.push(lane.platforms.shift());
 
-                if (curPlatform.hasBreakableWall)
-                {
-                    curPlatform.resetBreakableWall(platformDimensions);
-                }
-                if (curPlatform.hasSmallRotater)
-                {
-                    curPlatform.resetSmallRotater();
-                }
-                if (curPlatform.hasLargeRotater)
-                {
-                    curPlatform.resetLargeRotater();
-                }
+                lane.platforms.push(lane.platforms.shift());
+                curPlatform.resetPlatform();
             }
 
         }
@@ -138,8 +152,34 @@ class Game
             this.player.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
             this.player.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
         }
+
+        this.updateLavaFloor();
+        this.updateRain();
     }
 
+    updateRain()
+    {
+        for (const lane of this.lanes)
+        {
+            for (const platform of lane.platforms)
+            {
+                platform.updateRain(this.player.playerBox.position.z);
+            }
+        }
+    }
+
+    updateLavaFloor()
+    {
+        const lavaX = this.lavaFloor.position.x;
+        const lavaZ = this.lavaFloor.position.z;
+        const playerX = this.player.playerBox.position.x;
+        const playerZ = this.player.playerBox.position.z;
+        if (Math.abs(lavaX - playerX > 500) || Math.abs(lavaZ - playerZ) > 500)
+        {
+            this.lavaFloor.position.x = this.player.playerBox.position.x;
+            this.lavaFloor.position.z = this.player.playerBox.position.z;
+        }
+    }
     updateCamera()
     {
         if (!this.gameState.cameraIsUpdated && this.player.playerBox.position.z >= this.milestone)
@@ -191,7 +231,7 @@ class Game
     }
     checkIfDied()
     {
-        if (this.player.playerBox.position.y < -200 || Math.abs(this.player.playerBox.position.x) > 1000)
+        if (this.player.playerBox.position.y < -65 || Math.abs(this.player.playerBox.position.x) > 1000)
         {
             this.gameState.numLives--;
             this.player.resetPlayer(this.lanes[1].platforms[0]);
