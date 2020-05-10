@@ -17,6 +17,7 @@ import createTrampoline from "./createTrampoline";
 // import TrampolineObj from '../assets/Trampoline.obj';
 
 const main = () => {
+    window.resetGame = false;
     const canvas = document.getElementById('game-canvas');
     canvas.focus();
     const engine = new Engine(canvas, true);
@@ -50,9 +51,17 @@ const main = () => {
         handleKeyboard(scene, game);
         handleResize(engine);
 
-        engine.runRenderLoop(function() {
-
-            game.update();
+        engine.runRenderLoop(function()
+        {
+            if (!game.gameState.gameOver)
+            {
+                game.update();
+            }
+            if (window.resetGame)
+            {
+                game.reset();
+                window.resetGame = false;
+            }
             scene.render();
         });
     };

@@ -1,7 +1,8 @@
 import Lane from './lane';
 import { Vector3, Color3 } from 'babylonjs';
 import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
-
+import {createLifeBar, updateLifeBar} from '../modals/lifebar';
+import {createGameOverModal, updateGameOverModal} from '../modals/gameover';
 // Define Relevant Game Constants
 const numPlatforms = 4;
 const platformDimensions = {width: 50, height: 1, depth: 50};
@@ -20,7 +21,7 @@ const directionMap = {left, right, forward, back, up};
 
 
 // Define Initial Game State
-const initialGameState = {numJumps: 0};
+const initialGameState = {numJumps: 0, cameraIsUpdated: false, numLives: 3, gameOver: false};
 
 class Game
 {
@@ -29,7 +30,7 @@ class Game
         this.player = player;
         this.scene = scene;
         this.gameState = initialGameState;
-        this.milestone = 2000
+        this.milestone = 5000;
 
         // Initialize Lanes
         this.lanes = [];
@@ -43,6 +44,8 @@ class Game
             this.lanes.push(curLane);
         }
         createScoreBoard();
+        createLifeBar();
+        createGameOverModal();
     }
 
     // Make the game appear infinite
@@ -95,9 +98,15 @@ class Game
         }
     }
 
+
+    reset()
+    {
+        alert("Need to write a function that fully resets the entire game!");
+    }
     // Update everything before render
     update()
     {
+
         const onGround = this.checkOnGround();
         if (onGround)
         {
@@ -107,14 +116,33 @@ class Game
         // Check if player is in contact with a launcher
         this.handleLaunchers();
         this.checkIfDied();
+        this.checkIfGameOver();
         // Check if in contact with the ground, if so, reset jump count
         this.dampPlayerRotation();
 
 
         updateScoreBoard(Math.round(this.player.playerBox.position.z));
+        updateLifeBar(this.gameState.numLives);
         this.updateBackGround();
+
+        this.updateCamera();
+
+        if (this.gameState.gameOver)
+        {
+            this.player.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+            this.player.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
+        }
     }
 
+    updateCamera()
+    {
+        if (!this.gameState.cameraIsUpdated && this.player.playerBox.position.z >= this.milestone)
+        {
+            const camera = this.scene.getCameraByName("followCamera");
+            camera.radius = 55;
+            camera.heightOffset = 24;
+        }
+    }
     updateBackGround()
     {
         const curPos = this.player.playerBox.position;
@@ -159,7 +187,20 @@ class Game
     {
         if (this.player.playerBox.position.y < -200 || Math.abs(this.player.playerBox.position.x) > 1000)
         {
+            this.gameState.numLives--;
             this.player.resetPlayer(this.lanes[1].platforms[0]);
+            if (this.gameState.numLives === 0)
+            {
+                this.gameState.gameOver = true;
+            }
+        }
+    }
+    checkIfGameOver()
+    {
+        if (this.gameState.gameOver)
+        {
+            // Display Game Over Modal
+            updateGameOverModal(Math.round(this.player.playerBox.position.z));
         }
     }
 
@@ -167,7 +208,10 @@ class Game
     handleJump()
     {
         // // If have already jumped 2 times, cannot jump again
-        if (this.gameState.numJumps >= 1)
+        const curZ = this.player.playerBox.position.z;
+        const bonusJumps = Math.max(Math.floor(curZ/this.milestone), 0);
+
+        if (this.gameState.numJumps >= 1 + bonusJumps)
         {
             return 0;
         }
@@ -186,6 +230,10 @@ class Game
 
     handleKeyPress(keyMap)
     {
+        if (this.gameState.gameOver)
+        {
+            return;
+        }
         // Calculate velocity
         const velocity = this.player.playerBox.physicsImpostor.getLinearVelocity().scale(1);
         // AWSD Controls
@@ -202,9 +250,9 @@ class Game
         // velocity.addInPlace(directionMap.up.scale(-2));
         // Update Player's Velocity
 
-        velocity.x = Math.min(velocity.x, MAX_SPEED);
-        velocity.y = Math.min(velocity.y, MAX_SPEED);
-        velocity.z = Math.min(velocity.z, MAX_SPEED);
+        velocity.x = Math.max(Math.min(velocity.x, MAX_SPEED), -1*MAX_SPEED);
+        velocity.y = Math.max(Math.min(velocity.y, MAX_SPEED), -1*MAX_SPEED);
+        velocity.z = Math.max(Math.min(velocity.z, MAX_SPEED), -1*MAX_SPEED);
         this.player.playerBox.physicsImpostor.setLinearVelocity(velocity);
 
         // Handle Jump

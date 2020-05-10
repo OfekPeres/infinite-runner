@@ -216,6 +216,10 @@ class Platform
         }
         return false;
     }
+    animatePlatform()
+    {
+        
+    }
 }
 
 
