@@ -6,17 +6,10 @@ import createTrampoline from '../scene/createTrampoline';
 const createLauncher = (scene, pos, platformDimensions) =>
 {
     const launcher = createTrampoline(scene);
-    // const width = platformDimensions.width/4;
     const height = platformDimensions.height;
-    // const depth = platformDimensions.depth/4;
-    // const launcher = MeshBuilder.CreateBox("launcher", {width, height, depth}, scene);
-    // const launchMat = new StandardMaterial("launchMat", scene);
     launcher.position = pos;
     launcher.position.y += height;
-    // launchMat.diffuseColor = new Color3(.7, 0, 0.1);
-    // launcher.material = launchMat;
-    // launcher.receiveShadows = true;
-    // launcher.physicsImpostor = new PhysicsImpostor(launcher, PhysicsImpostor.BoxImpostor, { mass: 10000, friction: .1, restitution: 0.7 }, scene);
+
     return launcher;
 
 };
@@ -50,11 +43,6 @@ const createPlatform = (scene, pos, platformDimensions) =>
     const platformMat = new StandardMaterial("platformMat", scene);
     platformMat.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
     platformMat.emissiveColor = new Color3(0.1, 0.6, 0.2);
-    // const cloudTexture = new Texture("https://raw.githubusercontent.com/BabylonJS/Babylon.js/master/Playground/textures/cloud.png", scene);
-    // const cloudTexture = new Texture(nebula, scene);
-    // platformMat.diffuseTexture = cloudTexture;
-    // platformMat.wireframe = true;
-    // platformMat.diffuseTexture.hasAlpha = true;
     platformMat.backFaceCulling = false;
     platform.material = platformMat;
     platform.receiveShadows = true;
