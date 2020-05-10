@@ -4,7 +4,7 @@ import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
 import {createLifeBar, updateLifeBar} from '../modals/lifebar';
 import {createGameOverModal, updateGameOverModal} from '../modals/gameover';
 // Define Relevant Game Constants
-const numPlatforms = 4;
+const numPlatforms = 5;
 const platformDimensions = {width: 50, height: 1, depth: 50};
 const laneDimensions     = {width: platformDimensions.width*3};
 
@@ -101,7 +101,13 @@ class Game
 
     reset()
     {
-        alert("Need to write a function that fully resets the entire game!");
+        for (const lane of this.lanes)
+        {
+            lane.resetLane();
+        }
+        this.player.resetPlayer(this.lanes[1].platforms[0]);
+        this.gameState.gameOver = false;
+        this.gameState.numLives = 3;
     }
     // Update everything before render
     update()
@@ -189,7 +195,7 @@ class Game
         {
             this.gameState.numLives--;
             this.player.resetPlayer(this.lanes[1].platforms[0]);
-            if (this.gameState.numLives === 0)
+            if (this.gameState.numLives <= 0)
             {
                 this.gameState.gameOver = true;
             }
@@ -197,7 +203,7 @@ class Game
     }
     checkIfGameOver()
     {
-        if (this.gameState.gameOver)
+        if (this.gameState.gameOver || this.gameState.numLives <= 0)
         {
             // Display Game Over Modal
             updateGameOverModal(Math.round(this.player.playerBox.position.z));

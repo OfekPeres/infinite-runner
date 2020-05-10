@@ -30,10 +30,11 @@ const createRotatingBox = (scene, x, y, z) =>
     const mass = 10000;
 
     const friction = 0;
-    const restitution = 0;
+    const restitution = 1;
     box.setAbsolutePosition(new Vector3(x, y, z));
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+    material.emissiveColor = new Color3(.1, .1, .1);
     box.material = material;
     box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
     box.physicsImpostor.setAngularVelocity(new Vector3(0, 200, 0));
@@ -44,17 +45,16 @@ const createRotatingBox2 = (scene, x, y, z) =>
 {
     const box = MeshBuilder.CreateBox("Wall", {height: 20, width: 50, depth: 20});
     const mass = 10000;
-
     const friction = 0;
-    const restitution = 0;
+    const restitution = 1;
+
     box.setAbsolutePosition(new Vector3(x, y, z));
-    // debugger;
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+    material.emissiveColor = new Color3(.1, .1, .1);
     box.material = material;
     box.physicsImpostor = new PhysicsImpostor(box, PhysicsImpostor.BoxImpostor, { mass, friction, restitution }, scene);
     box.physicsImpostor.setAngularVelocity(new Vector3(0, 1, 0));
-    // debugger
     return box;
 };
 

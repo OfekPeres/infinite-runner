@@ -106,10 +106,8 @@ class Platform
             this.launcher.position.y = this.platform.position.y + this.platformDimensions.height/4;
             this.launcher.position.z = this.platform.position.z;
             this.launcher.position.x = this.platform.position.x;
-            // this.launcher.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
-            // this.launcher.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+            
             // Position launcher randomly on the platform - make sure that it won't hang over the edge
-
             const launcherWidth = this.platformDimensions.width/4;
             const randRangeX = this.platformDimensions.width - launcherWidth;
             const xRandShift = Math.random()*randRangeX - randRangeX/2;
@@ -147,10 +145,14 @@ class Platform
 
     resetSmallRotater()
     {
+        if (!this.hasSmallRotater)
+        {
+            return;
+        }
         const pos = this.platform.position;
         this.smallRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z);
-        this.smallRotater.physicsImpostor.setLinearVelocity(new Vector3(0,0,0))
-        this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 150, 0));
+        this.smallRotater.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
+        this.smallRotater.physicsImpostor.setAngularVelocity(new Vector3(0, Math.random()*50, 0));
 
 
 
@@ -158,9 +160,13 @@ class Platform
 
     resetLargeRotater()
     {
+        if (!this.hasLargeRotater)
+        {
+            return;
+        }
         const pos = this.platform.position;
         this.largeRotater.position = new Vector3(pos.x, pos.y + 10.5, pos.z);
-        this.largeRotater.physicsImpostor.setAngularVelocity(new Vector3(0, 1, 0));
+        this.largeRotater.physicsImpostor.setAngularVelocity(new Vector3(0, Math.random()*10, 0));
         this.largeRotater.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
     }
 
@@ -216,10 +222,16 @@ class Platform
         }
         return false;
     }
-    animatePlatform()
+
+    resetPlatform()
     {
-        
+        this.platform.material.diffuseColor = new Color3(Math.random(), Math.random(), Math.random());
+        this.resetSmallRotater();
+        this.resetLargeRotater();
+        this.resetLauncher();
+
     }
+
 }
 
 

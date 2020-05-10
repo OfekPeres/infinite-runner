@@ -46,7 +46,30 @@ class Lane
     {
         // Initialize platforms
         this.lanePos = lanePos.clone();
+        this.platformDimensions = platformDimensions;
+        this.laneDimensions = laneDimensions;
         this.platforms = initializePlatforms(scene, numPlatforms, lanePos, laneDimensions, platformDimensions);
+    }
+
+    resetLane()
+    {
+        this.platforms[0].platform.position = this.lanePos;
+        this.platforms[0].resetPlatform();
+        for (let i = 1; i < this.platforms.length; i++)
+        {
+            const prevPlatformPos = this.platforms[i-1].platform.position;
+            const zShift = this.platformDimensions.depth *(1 + Math.random()*3);
+            const yShift = 0;
+            const randRangeX = this.laneDimensions.width - this.platformDimensions.width;
+            const xShift = Math.random()*randRangeX - randRangeX/2;
+            const newPos = prevPlatformPos.clone();
+
+            newPos.x += xShift;
+            newPos.y += yShift;
+            newPos.z += zShift;
+            this.platforms[i].platform.position = newPos;
+            this.platforms[i].resetPlatform();
+        }
     }
 
 }
