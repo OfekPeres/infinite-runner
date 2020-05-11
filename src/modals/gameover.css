@@ -93,5 +93,6 @@ transition: all 0.4s ease 0s;
     grid-column: 1 / 4;
     grid-row: 2;
     font-size: calc(8px + 2vw);
+    font-family: "Monaco";
 
 }

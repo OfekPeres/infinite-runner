@@ -17,7 +17,8 @@ const createScoreBoard = () =>
     // Create Score Message (i.e "your score is:")
     const scoreMessage = document.createElement('p');
     scoreMessage.id = "score-message";
-    scoreMessage.style.fontFamily = 'sans serif';
+    // scoreMessage.style.fontFamily = 'sans serif';
+    scoreMessage.style.fontFamily = 'Monaco';
     scoreMessage.style.alignSelf = 'center';
     scoreMessage.style.justifySelf = 'center';
     scoreMessage.innerHTML = 'Your Score is: ';
@@ -27,7 +28,8 @@ const createScoreBoard = () =>
     // Create Score Board Value
     const score = document.createElement('p');
     score.id = "score";
-    score.style.fontFamily = 'sans serif';
+    // score.style.fontFamily = 'sans serif';
+    score.style.fontFamily = 'Monaco';
     score.style.alignSelf = 'center';
     score.style.justifySelf = 'center';
     score.innerHTML = "100";

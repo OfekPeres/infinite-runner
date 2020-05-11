@@ -1,11 +1,13 @@
 #game-title {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
+    font-family: "Monaco";
     font-size: calc(12px + 3vw);
     /* display: inline-flex; */
     grid-row: 2;
     grid-column: 1 / 4;
     padding: 0 2%;
     margin: 0;
+    text-align: center;
 }
 
 #game-title p {
@@ -15,12 +17,14 @@
     color: rgb(45, 110, 250);
     font-weight: bold;
     background-color: none;
+    font-family: "Brush Script MT";
 }
 
 .fire {
     color:firebrick;
     font-weight: bold;
     background-color: none;
+    font-family: "Brush Script MT";
 }
 
 
@@ -122,7 +126,8 @@
         justify-self: center;
         grid-column: 1 / 4;
         grid-row: 3;
-        font-size: calc(8px + 2vw);
+        font-size: calc(8px + 1vw);
         padding: 0 2%;
+        font-family: 'Monaco';
     
     }

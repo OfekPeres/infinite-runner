@@ -1,7 +1,7 @@
 import Lane from './lane';
 import { Vector3, Color3, MeshBuilder, Texture, StandardMaterial } from 'babylonjs';
 import { createScoreBoard, updateScoreBoard } from '../modals/scoreboard';
-import {createLifeBar, updateLifeBar} from '../modals/lifebar';
+import {createLifeBar, updateLifeBar, createGitHubLink} from '../modals/lifebar';
 import {createGameOverModal, updateGameOverModal} from '../modals/gameover';
 
 import lava from "../assets/lava2.jpeg";
@@ -73,6 +73,7 @@ class Game
         createScoreBoard();
         createLifeBar();
         createGameOverModal();
+        createGitHubLink();
     }
 
     // Make the game appear infinite
@@ -299,7 +300,7 @@ class Game
     handleKeyPress(keyMap)
     {
         // Reject keyboard inputs if the game is over
-        if (this.gameState.gameOver)
+        if (this.gameState.gameOver || !window.playerIsReady)
         {
             return;
         }

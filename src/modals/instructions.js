@@ -39,7 +39,7 @@ const createInstructionsModal = () =>
     instructionsModalHeader.id = "game-title";
     instructionsModalHeader.innerHTML = '<p>A Game of <span class="ice">ICE </span> and <span class="fire">FIRE</span></p>';
 
-    instructionsModalMessage.innerHTML = "To play the game, use the Arrow Keys OR AWSD to move. Use the spacebar to jump! Earn more points by surviving longer! <br> Good Luck!"
+    instructionsModalMessage.innerHTML = "To play the game, use the Arrow Keys OR AWSD to move. Use the spacebar to jump! Earn more points by surviving longer! <br> Good Luck!";
 
     window.playerIsReady = false;
 };
@@ -54,16 +54,5 @@ const startGame = () =>
     window.playerIsReady = true;
 };
 
-
-// Function that is called on click on the game over modal to reset the game. It alerts the game object to
-// reset by toggling the global resetGame boolean flag
-const resetGame = () =>
-{
-    const instructionsModal = document.getElementById('game-over-modal-container');
-    const canvas = document.querySelector('#game-canvas');
-    canvas.focus();
-    instructionsModal.style.display = 'none';
-    window.resetGame = true;
-};
 
 export {createInstructionsModal};
