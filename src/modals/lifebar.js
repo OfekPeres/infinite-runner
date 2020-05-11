@@ -63,7 +63,7 @@ const createGitHubLink = () =>
      githubLink.style.fontFamily = "Monaco";
      githubLink.style.alignSelf = 'center';
      githubLink.style.justifySelf = 'center';
-     githubLink.innerHTML = '<a href="https://github.com/OfekPeres/infinite-runner">Go To Our GitHub Repo!!<a/>';
+     githubLink.innerHTML = '<a href="https://github.com/OfekPeres/infinite-runner" target="_blank">Go To Our GitHub Repo!!<a/>';
      githubLink.style.color = "white";
 
      container1.appendChild(githubLink);
