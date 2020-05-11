@@ -30,6 +30,8 @@ The project has a few key components
 
 No prereqs needed. 
 
+## Acknowledgments
+Thank you to google poly for the trampoline mesh found at: [https://poly.google.com/view/44njxNdC0gt](https://poly.google.com/view/44njxNdC0gt)
 
 
 ## Deployment
