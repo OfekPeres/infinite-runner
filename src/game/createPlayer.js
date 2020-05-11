@@ -1,12 +1,13 @@
 import {Vector3} from 'babylonjs';
 import {createPlayerBox} from '../scene/createBox.js';
 
+
+// Creates a wrapper for the player mesh
 class Player
 {
     constructor(scene)
     {
         this.playerBox = createPlayerBox(scene);
-        // console.log(this.playerBox);
     }
 
     resetPlayer(curPlatform)
@@ -21,8 +22,4 @@ class Player
 
 }
 
-
-
 export default Player;
-
-

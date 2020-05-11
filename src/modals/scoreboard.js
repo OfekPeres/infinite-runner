@@ -1,6 +1,6 @@
 
 
-
+// Creates a score board in the top right of the screen that tells the player their current score
 const createScoreBoard = () =>
 {
     // Create container for scoreboard
@@ -16,7 +16,6 @@ const createScoreBoard = () =>
 
     // Create Score Message (i.e "your score is:")
     const scoreMessage = document.createElement('p');
-    // scoreMessage.style.display = 'flex';
     scoreMessage.id = "score-message";
     scoreMessage.style.fontFamily = 'sans serif';
     scoreMessage.style.alignSelf = 'center';
@@ -58,8 +57,5 @@ const updateScoreBoard = (score) =>
 
     }
 };
-
-// createScoreBoard();
-
 
 export {createScoreBoard, updateScoreBoard};

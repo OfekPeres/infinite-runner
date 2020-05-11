@@ -7,23 +7,21 @@ import {createGameOverModal, updateGameOverModal} from '../modals/gameover';
 import lava from "../assets/lava2.jpeg";
 
 // Define Relevant Game Constants
-const numPlatforms = 5;
+const numPlatforms = 10;
 const platformDimensions = {width: 50, height: 1, depth: 50};
 const laneDimensions     = {width: platformDimensions.width*3};
-
-
-const SPEED = 15;
-const MAX_SPEED = 2 * SPEED;
-const left    = new Vector3(-1, 0, 0);
-const right   = new Vector3(1, 0, 0);
-const forward = new Vector3(0, 0, 1);
-const back    = new Vector3(0, 0, -1);
-const up      = new Vector3(0, 1, 0);
+const SPEED              = 15;
+const MAX_SPEED          = 2 * SPEED;
+const left               = new Vector3(-1, 0, 0);
+const right              = new Vector3(1, 0, 0);
+const forward            = new Vector3(0, 0, 1);
+const back               = new Vector3(0, 0, -1);
+const up                 = new Vector3(0, 1, 0);
 
 const directionMap = {left, right, forward, back, up};
 
 
-
+// Create a tiled plane of lava images beneath the game
 const createLavaFloor = (scene) =>
 {
 
@@ -51,13 +49,15 @@ const initialGameState = {numJumps: 0, cameraIsUpdated: false, numLives: 3, game
 
 class Game
 {
+
     constructor(scene, player, numLanes=3)
     {
         this.player = player;
         this.scene = scene;
         this.gameState = initialGameState;
-        this.milestone = 5000;
+        this.milestone = 5000; // A distance to beat when the game becomes harder
         this.lavaFloor = createLavaFloor(this.scene);
+
         // Initialize Lanes
         this.lanes = [];
         const lanePos = new Vector3(0, -5, 0);
@@ -65,10 +65,11 @@ class Game
         {
             // Shift each lane over by the width of a lane
             const curLanePos = lanePos.clone();
-            curLanePos.x+= i*laneDimensions.width;
+            curLanePos.x += i*laneDimensions.width;
             const curLane = new Lane(scene, numPlatforms, curLanePos, laneDimensions, platformDimensions);
             this.lanes.push(curLane);
         }
+        // Initialize additional html elements like the scoreboard, life bar, and game over modal
         createScoreBoard();
         createLifeBar();
         createGameOverModal();
@@ -90,12 +91,11 @@ class Game
                 curPlatform.platform.position.z = lane.platforms[lane.platforms.length-1].platform.position.z + (depth) + 3*depth*Math.random();
 
                 // Randomize X position - place the new platform randomly within the lane
-
-                const randRangeX = laneWidth - platformDimensions.width;
+                const randRangeX = laneWidth/1.5 - platformDimensions.width;
                 const xRandShift = Math.random()*randRangeX - randRangeX/2;
                 curPlatform.platform.position.x = laneX + xRandShift;
 
-                // Randomize Y position - if player is past 2000
+                // Randomize Y position - if player is past the milestone distance
                 if (this.player.playerBox.position.z > this.milestone)
                 {
                     const laneY = lane.lanePos.y;
@@ -104,7 +104,7 @@ class Game
                     curPlatform.platform.position.y = laneY + yRandShift;
                 }
 
-
+                // Push the first platform to the back of the platforms list
                 lane.platforms.push(lane.platforms.shift());
                 curPlatform.resetPlatform();
             }
@@ -112,7 +112,7 @@ class Game
         }
     }
 
-
+    // Reset the game once it ends and the user clicks the reset game button
     reset()
     {
         for (const lane of this.lanes)
@@ -123,40 +123,48 @@ class Game
         this.gameState.gameOver = false;
         this.gameState.numLives = 3;
     }
-    // Update everything before render
+
+    // Update all aspects of the game by one time step before render
     update()
     {
-
+        // Check if in contact with the ground, if so, reset jump count
         const onGround = this.checkOnGround();
         if (onGround)
         {
             this.gameState.numJumps = 0;
         }
+        // Make the game infinite
         this.extendTrack();
         // Check if player is in contact with a launcher
         this.handleLaunchers();
+        // Update game state
         this.checkIfDied();
         this.checkIfGameOver();
-        // Check if in contact with the ground, if so, reset jump count
+        // Prevent player from rotating like crazy
         this.dampPlayerRotation();
 
-
+        // Update Displays
         updateScoreBoard(Math.round(this.player.playerBox.position.z));
         updateLifeBar(this.gameState.numLives);
         this.updateBackGround();
 
+        // Update Camera (once difficulty changes camera zooms out)
         this.updateCamera();
 
+        // Halt player movement
         if (this.gameState.gameOver)
         {
             this.player.playerBox.physicsImpostor.setLinearVelocity(new Vector3(0, 0, 0));
             this.player.playerBox.physicsImpostor.setAngularVelocity(new Vector3(0, 0, 0));
         }
 
+        // Shift the lava floor based on player position to appear infinite
         this.updateLavaFloor();
+        // Make the rain of hail keep falling
         this.updateRain();
     }
 
+    // Goes through every platform and updates its hail obstacle if it has one
     updateRain()
     {
         for (const lane of this.lanes)
@@ -168,6 +176,7 @@ class Game
         }
     }
 
+    // Adjust the lava floors position based on player movement to appear infinite
     updateLavaFloor()
     {
         const lavaX = this.lavaFloor.position.x;
@@ -180,6 +189,8 @@ class Game
             this.lavaFloor.position.z = this.player.playerBox.position.z;
         }
     }
+
+    // Zoom out so that the player can see more once the game becomes more difficult
     updateCamera()
     {
         if (!this.gameState.cameraIsUpdated && this.player.playerBox.position.z >= this.milestone)
@@ -189,6 +200,8 @@ class Game
             camera.heightOffset = 24;
         }
     }
+
+    // Change background color of game as player progresses through it. A lightish blue/green is the final color!
     updateBackGround()
     {
         const curPos = this.player.playerBox.position;
@@ -197,6 +210,8 @@ class Game
         const b = Math.min(curPos.z/ 20000, 1);
         this.scene.clearColor = new Color3(r, g, b);
     }
+
+    // Check if player is in contact with a trampoline, if so, launch the player upwards
     handleLaunchers()
     {
         for (const lane of this.lanes)
@@ -206,19 +221,21 @@ class Game
                 const curPlatform = lane.platforms[i];
                 if (curPlatform.hasLauncher && this.player.playerBox.intersectsMesh(curPlatform.launcher))
                 {
-                    const impulse  = new Vector3(0, 100, 0);
+                    const impulse  = new Vector3(0, 300, 0);
                     this.player.playerBox.physicsImpostor.applyImpulse(impulse, this.player.playerBox.getAbsolutePosition());
                 }
             }
 
         }
     }
+
+    // Check if the player is in contact with the ground
     checkOnGround()
     {
         for (const lane of this.lanes)
         {
             // Only check first 3 platforms of each lane because it is highly unlikely that the player will be allowed to jump farther than that
-            for (let i = 0; i < 3; i++)
+            for (let i = 0; i < 5; i++)
             {
                 const curPlatform = lane.platforms[i];
                 if (curPlatform.intersectsPlatform(this.player.playerBox))
@@ -229,6 +246,8 @@ class Game
         }
         return false;
     }
+
+    // Update Game State if player has fallen
     checkIfDied()
     {
         if (this.player.playerBox.position.y < -65 || Math.abs(this.player.playerBox.position.x) > 1000)
@@ -241,6 +260,8 @@ class Game
             }
         }
     }
+
+    // Update Game display based on Game State
     checkIfGameOver()
     {
         if (this.gameState.gameOver || this.gameState.numLives <= 0)
@@ -265,17 +286,19 @@ class Game
        this.gameState.numJumps++;
        return 1;
 
-
     }
 
+    // Reduce Player's rotation every update to prevent insane, undamping rotation
     dampPlayerRotation()
     {
         const curAngularVel = this.player.playerBox.physicsImpostor.getAngularVelocity();
         this.player.playerBox.physicsImpostor.setAngularVelocity(curAngularVel.scale(0.97));
     }
 
+    // Accept and Handle user keyboard input
     handleKeyPress(keyMap)
     {
+        // Reject keyboard inputs if the game is over
         if (this.gameState.gameOver)
         {
             return;
@@ -293,9 +316,8 @@ class Game
         velocity.addInPlace(directionMap.right.scale(keyMap.ArrowRight * SPEED));
         velocity.addInPlace(directionMap.forward.scale(keyMap.ArrowUp * SPEED));
         velocity.addInPlace(directionMap.back.scale(keyMap.ArrowDown * SPEED));
-        // velocity.addInPlace(directionMap.up.scale(-2));
-        // Update Player's Velocity
 
+        // Update Player's Velocity - Limit it to the MAX_SPEED Constant in either the positive or negative direction
         velocity.x = Math.max(Math.min(velocity.x, MAX_SPEED), -1*MAX_SPEED);
         velocity.y = Math.max(Math.min(velocity.y, MAX_SPEED), -1*MAX_SPEED);
         velocity.z = Math.max(Math.min(velocity.z, MAX_SPEED), -1*MAX_SPEED);
@@ -321,8 +343,5 @@ class Game
     }
 
 }
-
-
-
 
 export default Game;

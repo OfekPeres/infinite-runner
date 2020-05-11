@@ -1,15 +1,12 @@
 import { FollowCamera, Mesh, Vector3} from 'babylonjs';
 
-
+// A function to initialize the camera and set it to follow the player throughout the game.
 const createCamera = (scene, canvas, player) => {
 
     const camPos = 80;
-    // Parameters : name, position, scene
-    // const camera = new UniversalCamera("UniversalCamera", new Vector3(0, camPos, -2*camPos), scene);
-
     const followCamera = new FollowCamera("followCamera", new Vector3(0, camPos, -camPos), scene);
-    followCamera.radius = 35;              // How far from the object should the camera be.
-    followCamera.heightOffset = 16;        // How high above the object should it be.
+    followCamera.radius = 35;               // How far from the object should the camera be.
+    followCamera.heightOffset = 16;         // How high above the object should it be.
     followCamera.rotationOffset = 180;      // The camera's angle. here - from behind.
     followCamera.cameraAcceleration = 0.5;  // Acceleration of the camera.
     followCamera.maxCameraSpeed = 20;       // The camera's max speed.

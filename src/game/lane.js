@@ -20,9 +20,9 @@ const calculatePlatformPos = (startPos, laneDimensions, firstPlatform = false, p
     return new Vector3(x, y, z);
 };
 
+// Helper function to initially place all of the platforms in the lane
 const initializePlatforms = (scene, numPlatforms, lanePos, laneDimensions, platformDimensions) =>
 {
-    // console.log("Initializing Platforms in Lane");
     const platforms = [];
 
     const startPos = lanePos.clone();
@@ -42,6 +42,10 @@ const initializePlatforms = (scene, numPlatforms, lanePos, laneDimensions, platf
     }
     return platforms;
 };
+
+
+
+// Class to contain all platforms in a lane of the game
 class Lane
 {
     constructor(scene, numPlatforms, lanePos, laneDimensions, platformDimensions)
@@ -53,6 +57,7 @@ class Lane
         this.platforms = initializePlatforms(scene, numPlatforms, lanePos, laneDimensions, platformDimensions);
     }
 
+    // When the game ends, reset the positions of all of the lanes
     resetLane()
     {
         this.platforms[0].platform.position = this.lanePos;

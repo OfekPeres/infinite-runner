@@ -1,14 +1,11 @@
-import {Scene, Color3, Vector3} from 'babylonjs';
+import {Scene, Color3} from 'babylonjs';
 
+// Initialize and Scene and activate physics
 const createScene = (engine) => {
     const scene = new Scene(engine);
     scene.enablePhysics();
-    // const g = new Vector3(0, -20, 0);
-    // scene.getPhysicsEngine().setGravity(g);
     scene.getPhysicsEngine().setTimeStep(1/20);
     scene.clearColor = new Color3(0, 0, 0.2);
-
-
     return scene;
 };
 

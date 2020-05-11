@@ -1,8 +1,6 @@
-
-
 import './gameover.css';
 
-
+// Add html elements to the game over modal
 const createGameOverModal = () =>
 {
     const gameOverModalContainer = document.createElement('div');
@@ -36,7 +34,7 @@ const createGameOverModal = () =>
 
 };
 
-
+// Update the game over display with the correct score
 const updateGameOverModal = (score) =>
 {
     const scoreMessageDiv = document.getElementById('game-over-message');
@@ -47,7 +45,8 @@ const updateGameOverModal = (score) =>
 };
 
 
-
+// Function that is called on click on the game over modal to reset the game. It alerts the game object to
+// reset by toggling the global resetGame boolean flag
 const resetGame = () =>
 {
     const gameOverModal = document.getElementById('game-over-modal-container');
@@ -57,9 +56,4 @@ const resetGame = () =>
     window.resetGame = true;
 };
 
-
-
 export {createGameOverModal, updateGameOverModal};
-
-
-

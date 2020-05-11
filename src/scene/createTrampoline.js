@@ -1,12 +1,13 @@
 import 'babylonjs-loaders';
 import {PBRMaterial, Vector3, Color3} from 'babylonjs';
 
+// Clone a trampoline mesh from the Asset Managers Loaded Mesh
 const createTrampoline = (scene) => {
     // Initialize a trampoline as a clone of the original
     const trampoline = window.trampoline.clone();
     trampoline.isVisible = true;
-
     trampoline.scaling = new Vector3(2, 2, 2);
+    // Set the Trampoline material to look ice-like
     const pbr = new PBRMaterial("pbr", scene);
     pbr.metallic = 0.0;
     pbr.roughness = 0;

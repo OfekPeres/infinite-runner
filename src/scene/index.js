@@ -1,26 +1,18 @@
-import {Engine, Vector3, AssetsManager, StandardMaterial, MeshBuilder, Texture, Mesh} from 'babylonjs';
-
-
+import {Engine, AssetsManager} from 'babylonjs';
 import createScene from './createScene';
 import createLighting from './createLighting';
-// import createInfiniteTrack, { updateInfiniteTrack } from './createGround';
 import createCamera from './createCamera';
-// import { createRandomBox, createRotatingBox, createRotatingBox2} from './createBox';
 import Player from '../game/createPlayer';
 import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
 import Game from '../game/game';
-// import Platform from '../game/platform';
-// import Lane from '../game/lane';
 
-import createTrampoline from "./createTrampoline";
-// import TrampolineObj from '../assets/Trampoline.obj';
-
-import lava from "../assets/lava2.jpeg";
 
 const main = () => {
+    // Initialize Babylon Assets and Game Global Variables
     window.resetGame = false;
     const canvas = document.getElementById('game-canvas');
+    // Click onto the canvas so you can immediately use the keyboard to play.
     canvas.focus();
     const engine = new Engine(canvas, true);
     const scene = createScene(engine);
@@ -30,6 +22,7 @@ const main = () => {
 
     const meshTask = assetsManager.addMeshTask("trampoline", "", "", 'https://raw.githubusercontent.com/OfekPeres/infinite-runner/master/src/assets/Trampoline.obj');
 
+    // Once mesh is loaded, add a global reference to it for cloning.
     meshTask.onSuccess = function(task)
     {
         const trampoline = task.loadedMeshes[1];
@@ -39,34 +32,31 @@ const main = () => {
 
     };
 
+    // Set up the loading screen
     assetsManager.useDefaultLoadingScreen = true;
     engine.loadingUIText = "Loading 3D Models! Game will be ready soon!";
 
+    // After Assets are done loading, initialize the game
     assetsManager.onFinish = () => {
 
-        // Initialize player and game objects once all assets have been loaded
         createLighting(scene);
         const player = new Player(scene);
         createCamera(scene, canvas, player);
-        const game = new Game(scene, player, 3);
+        const game = new Game(scene, player, 4);
 
+        // Add keyboard and resize listeners
         handleKeyboard(scene, game);
         handleResize(engine);
 
-
-
-
-
-
-
-
-
+        // Render Loop
         engine.runRenderLoop(function()
         {
+            // Update Game one timestep as long as the game is till going on
             if (!game.gameState.gameOver)
             {
                 game.update();
             }
+            // If game is over, check that the user has clicked out of the game over modal.
             if (window.resetGame)
             {
                 game.reset();
@@ -75,11 +65,9 @@ const main = () => {
             scene.render();
         });
     };
+    // Actually call the load function to begin downloading/setting up the meshes.
     assetsManager.load();
 
 };
 
 export default main;
-
-
-

@@ -1,6 +1,4 @@
-
-
-
+// Create a status bar that displays the number of lives the player has left in the top left corner of the screen
 const createLifeBar = () =>
 {
     // Create container for lifebar
@@ -39,6 +37,7 @@ const createLifeBar = () =>
     document.body.appendChild(container);
 };
 
+// Updates the display of the life bar
 const updateLifeBar = (lives) =>
 {
 
@@ -52,8 +51,5 @@ const updateLifeBar = (lives) =>
     lifeBarVal.innerHTML = livesLeft;
 
 };
-
-// createScoreBoard();
-
 
 export {createLifeBar, updateLifeBar};
