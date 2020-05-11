@@ -18,7 +18,7 @@ const createGameOverModal = () =>
     closeButton.classList.add("close");
     closeButton.innerHTML = "X";
 
-    gameOverMessage.classList.add("message");
+    gameOverMessage.classList.add("game-over-message");
     gameOverResetButton.classList.add("reset");
     gameOverResetButton.innerHTML = "Reset Game";
 

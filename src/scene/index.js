@@ -6,6 +6,7 @@ import Player from '../game/createPlayer';
 import handleKeyboard from './handleKeyboard';
 import handleResize from '../eventListeners/resize';
 import Game from '../game/game';
+import { createInstructionsModal } from '../modals/instructions';
 
 
 const main = () => {
@@ -47,12 +48,12 @@ const main = () => {
         // Add keyboard and resize listeners
         handleKeyboard(scene, game);
         handleResize(engine);
-
+        createInstructionsModal();
         // Render Loop
         engine.runRenderLoop(function()
         {
             // Update Game one timestep as long as the game is till going on
-            if (!game.gameState.gameOver)
+            if (!game.gameState.gameOver && window.playerIsReady)
             {
                 game.update();
             }

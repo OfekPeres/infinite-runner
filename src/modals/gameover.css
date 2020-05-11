@@ -87,7 +87,7 @@ transition: all 0.4s ease 0s;
 
 
 
-.message {
+.game-over-message {
     align-self: center;
     justify-self: center;
     grid-column: 1 / 4;
