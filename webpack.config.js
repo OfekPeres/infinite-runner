@@ -41,12 +41,8 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
-                  'style-loader',
-                  'css-loader'
-                ]
-            }
-
+                use: ['style-loader', 'css-loader'],
+            },
         ],
     },
     resolve: {
@@ -57,8 +53,15 @@ module.exports = {
         },
     },
     plugins: [
-        new HtmlWebpackPlugin({ title: pkg.title,
-             favicon: 'src/favicon.ico',
-             template: 'src/index.html'}),
+        new HtmlWebpackPlugin({
+            title: pkg.title,
+            favicon: 'src/favicon.ico',
+            template: 'src/index.html',
+        }),
     ],
+    performance: {
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
+        hints: false
+    },
 };
